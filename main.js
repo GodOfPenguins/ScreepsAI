@@ -13,6 +13,8 @@ var bubLevel = 0;
 
 module.exports.loop = function () {
 
+    if((Game.time % 20) === 0){clearDeadCreeps()} 
+
     if(bubLevel === 0 && roomEnergyAvailable >= 550){
         bubLevel = 1;
     }
@@ -37,7 +39,7 @@ module.exports.loop = function () {
     console.log('Energy Available: ' + roomEnergyAvailable + ', ' + roomEnergyAvailablePercent);
     console.log(Game.time);
 
-    // Basic build logic, this creates one creep for every 50 energy available in the room. I have no basis to know if that's a good pace for expansion or not.
+    // Basic build logic.
     
     if(numBUBCreeps < (roomEnergyAvailable / 50) && bubLevel === 0){ // 200 point BUBs
         let newName = 'BUBworker' + Game.time;
@@ -100,6 +102,15 @@ function allocateRoles(){
         }
         else{
             bubs[b].memory.role = 'upgrader'
+        }
+    }
+}
+
+function clearDeadCreeps(){
+    for(var name in Memory.creeps) {
+        if(!Game.creeps[name]) {
+            delete Memory.creeps[name];
+            console.log('Clearing non-existing creep memory:', name);
         }
     }
 }
