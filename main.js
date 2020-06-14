@@ -49,17 +49,19 @@ module.exports.loop = function () {
 
     // Basic build logic.
     
-    if(numBUBCreeps < (roomEnergyAvailable / 50) && bubLevel === 0){ // 200 point BUBs
-        let newName = 'BUBworker' + Game.time;
-        console.log('Spawning new BUB: ' + newName);
-        Game.spawns['Spawn1'].spawnCreep(basicUtiltyBuild, newName,
-            {memory: {role: 'harvester', buildType: 'BUB'}});
-    }
-    if ((numBUBmkiiCreeps + (numBUBCreeps / 2)) < (roomEnergyAvailable / 100) && bubLevel === 1){ // 550 point BUBs
-        let newName = 'BUB Mk.II' + Game.time;
-        console.log('Spawning new BUB: ' + newName);
-        Game.spawns['Spawn1'].spawnCreep(basicUtiltyBuild, newName,
-            {memory: {role: 'harvester', buildType: 'BUBmkII'}});
+    if(Game.spawns['Spawn1'].spawning === null){
+        if(numBUBCreeps < (roomEnergyAvailable / 50) && bubLevel === 0){ // 200 point BUBs
+            let newName = 'BUBworker' + Game.time;
+            console.log('Spawning new BUB: ' + newName);
+            Game.spawns['Spawn1'].spawnCreep(basicUtiltyBuild, newName,
+                {memory: {role: 'harvester', buildType: 'BUB'}});
+        }
+        if ((numBUBmkiiCreeps + (numBUBCreeps / 2)) < (roomEnergyAvailable / 100) && bubLevel === 1){ // 550 point BUBs
+            let newName = 'BUB Mk.II' + Game.time;
+            console.log('Spawning new BUB: ' + newName);
+            Game.spawns['Spawn1'].spawnCreep(basicUtiltyBuild, newName,
+                {memory: {role: 'harvester', buildType: 'BUBmkII'}});
+        }
     }
 
     // Allocate roles every 5 ticks.
