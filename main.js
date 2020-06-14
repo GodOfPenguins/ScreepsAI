@@ -1,6 +1,7 @@
 const roleHarvester = require('role.harvester');
 const roleUpgrader = require('role.upgrader');
 const roleBuilder = require('role.builder');
+const getEnergy = require('util.sourceAllocator');
 
 var harvesters;
 var upgraders;
@@ -13,10 +14,6 @@ var numBUBmkiiCreeps
 var numConSites;
 var bubLevel = 0;
 
-console.log("TESTING")
-
-//const sourceNumFreeSpots = [3, 3, 0, 1]
-
 module.exports.loop = function () {
 
     if((Game.time % 20) === 0){clearDeadCreeps()} 
@@ -25,13 +22,12 @@ module.exports.loop = function () {
         bubLevel = 1;
     }
 
-    const basicUtiltyBuild = [WORK, CARRY, MOVE]; // 200 points
+    const basicUtiltyBuild = [WORK, CARRY, MOVE]; // 200 points, "Bub" :D
     const basicUtiltyBuildmkII = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]; // 550 points
     
     const defenderMKi = [ATTACK, ATTACK, MOVE, MOVE]; // 300 points
     
     // Variables for general state information
-    getBuBRoles();
     numConSites = Object.keys(Game.constructionSites).length;
     numBUBCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUB').length;
     numBUBmkiiCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUBmkII').length;
@@ -39,15 +35,6 @@ module.exports.loop = function () {
     var roomEnergyAvailable = Game.spawns['Spawn1'].room.energyAvailable;
     bubs = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUB');
     bub2s = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUBmkII')
-    
-    // Console output for debugging and status monitoring
-    console.log('Harvesters: ' + harvesters.length);
-    console.log('Upgraders: ' + upgraders.length);
-    console.log('Builders: ' + builders.length);
-    console.log('Construction Sites: ' + numConSites);
-    console.log('BUBs: ' + numBUBCreeps, );
-    console.log('Energy Available: ' + roomEnergyAvailable + ', ' + roomEnergyAvailablePercent);
-    console.log(Game.time);
 
     // Basic build logic.
     let currentSpawn = Game.spawns['Spawn1'];
@@ -75,18 +62,25 @@ module.exports.loop = function () {
     for (let name in Game.creeps){
         let creep = Game.creeps[name];
         let role = creep.memory.role;
-        switch (role){
-            case 'harvester':
-                roleHarvester.run(creep);
-                break;
-            case 'upgrader':
-                roleUpgrader.run(creep);
-                break;
-            case 'builder':
-                roleBuilder.run(creep);
-                break;
-            default:
-                console.log(creep + ' has an undefined role.')
+        let needHarvest = creep.memory.harvesting;
+        if(needHarvest){
+            getEnergy.run(creep)
+            continue;
+        }
+        else{
+            switch (role){
+                case 'harvester':
+                    roleHarvester.run(creep);
+                    break;
+                case 'upgrader':
+                    roleUpgrader.run(creep);
+                    break;
+                case 'builder':
+                    roleBuilder.run(creep);
+                    break;
+                default:
+                    console.log(creep + ' has an undefined role.')
+            }
         }
     }
 }   
@@ -104,18 +98,23 @@ function allocateRoles(){
     let bubBuildNeed = Math.ceil(numConSites / 4); // Builders are allocated based on the number of empty build sites.
 
     for (let b in bubs){
+        let bub = bubs[b];
+        bub.memory.harvesting = false;
+        bub.memory.building = false;
+        bub.memory.upgrading = false;
         if (bubHarvNeed > 0){
-            bubs[b].memory.role = 'harvester';
+            bub.memory.role = 'harvester';
             bubHarvNeed--;
         }
         else if (bubBuildNeed > 0){
-            bubs[b].memory.role = 'builder';
+            bub.memory.role = 'builder';
             bubBuildNeed--;
         }
         else{
-            bubs[b].memory.role = 'upgrader'
+            bub.memory.role = 'upgrader'
         }
     }
+    getBuBRoles();
 }
 
 function clearDeadCreeps(){
