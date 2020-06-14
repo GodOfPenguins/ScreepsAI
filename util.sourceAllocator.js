@@ -5,12 +5,13 @@ var nextSource = 0;
 
 function reserveSpot(){
     let index = null;
-    let m = maxSpotsPerSource[i];
-    let n = numAllocated[i];
+    let m;
+    let n;
     let lON = 0;
     let lOS = 0; // "Least objectionable solution"
     for (let i = 0; i < maxSpotsPerSource.length; i++){
-        
+        m = maxSpotsPerSource[i];
+        n = numAllocated[i];        
         if (n < m){ // If there is an open spot.
             index = i;
             break;
@@ -38,9 +39,11 @@ function reserveSpot(){
 var getEnergy = {
     /** @param {Creep} creep **/
     run: function(creep) {
+        creep.memory.building = false;
+        creep.memory.upgrading = false;
         let sources = creep.room.find(FIND_SOURCES);
         if(creep.store.getFreeCapacity() > 0){
-            if (creep.memory.targetSource == null){
+            if (creep.memory.targetSourceIndex == null){
                 let targetIndex = reserveSpot();
                 creep.memory.targetSourceIndex = targetIndex;
             }
@@ -49,13 +52,11 @@ var getEnergy = {
                 creep.moveTo(target, {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
-        if(creep.store.getFreeCapacity === 0){
+        else{
             creep.memory.harvesting = false;
-            creep.memory.targetSource = null;
-            numAllocated[creep.memory.targetSourceIndex]--;
+            numAllocated[creep.memory.targetSourceIndex]--; // Deallocate the used slot.
             creep.memory.targetSourceIndex = null;
         }
-
     }
 }
 

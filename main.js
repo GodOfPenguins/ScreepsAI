@@ -15,6 +15,7 @@ var numConSites;
 var bubLevel = 0;
 
 module.exports.loop = function () {
+    console.log(Game.time);
 
     if((Game.time % 20) === 0){clearDeadCreeps()} 
 
@@ -62,9 +63,8 @@ module.exports.loop = function () {
     for (let name in Game.creeps){
         let creep = Game.creeps[name];
         let role = creep.memory.role;
-        let needHarvest = creep.memory.harvesting;
-        if(needHarvest){
-            getEnergy.run(creep)
+        if(creep.memory.harvesting == true){
+            getEnergy.run(creep);
             continue;
         }
         else{
@@ -89,6 +89,7 @@ function getBuBRoles(){ // This is a helper function to get how many BUBs are wo
     harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+    console.log("BUB role allocation: " + harvesters.length + ", " + upgraders.length+ ", " + builders.length)
 }
 
 function allocateRoles(){
