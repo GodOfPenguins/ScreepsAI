@@ -8,8 +8,13 @@ var builders;
 var bubs;
 var roomEnergyAvailablePercent;
 var numBUBCreeps;
+var numBUBmkiiCreeps
 var numConSites;
 var bubLevel = 0;
+
+console.log("TESTING")
+
+//const sourceNumFreeSpots = [3, 3, 0, 1]
 
 module.exports.loop = function () {
 
@@ -22,10 +27,13 @@ module.exports.loop = function () {
     const basicUtiltyBuild = [WORK, CARRY, MOVE]; // 200 points
     const basicUtiltyBuildmkII = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]; // 550 points
     
+    const defenderMKi = [ATTACK, ATTACK, MOVE, MOVE]; // 300 points
+    
     // Variables for general state information
     getBuBRoles();
     numConSites = Object.keys(Game.constructionSites).length;
     numBUBCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUB').length;
+    numBUBCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUBmkII').length;
     roomEnergyAvailablePercent = Game.spawns['Spawn1'].room.energyAvailable / Game.spawns['Spawn1'].room.energyCapacityAvailable;
     var roomEnergyAvailable = Game.spawns['Spawn1'].room.energyAvailable;
     bubs = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUB');
@@ -47,7 +55,7 @@ module.exports.loop = function () {
         Game.spawns['Spawn1'].spawnCreep(basicUtiltyBuild, newName,
             {memory: {role: 'harvester', buildType: 'BUB'}});
     }
-    if (numBUBCreeps < (roomEnergyAvailable / 100) && bubLevel === 1){ // 550 point BUBs
+    if ((numBUBmkiiCreeps + (numBUBCreeps / 2)) < (roomEnergyAvailable / 100) && bubLevel === 1){ // 550 point BUBs
         let newName = 'BUB Mk.II' + Game.time;
         console.log('Spawning new BUB: ' + newName);
         Game.spawns['Spawn1'].spawnCreep(basicUtiltyBuild, newName,
