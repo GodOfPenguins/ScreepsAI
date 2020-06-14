@@ -9,15 +9,20 @@ var bubs;
 var roomEnergyAvailablePercent;
 var numBUBCreeps;
 var numConSites;
-
+var bubLevel = 0;
 
 module.exports.loop = function () {
 
-    const basicUtiltyBuild = [WORK, CARRY, MOVE]
+    if(bubLevel === 0 && roomEnergyAvailable >= 550){
+        bubLevel = 1;
+    }
+
+    const basicUtiltyBuild = [WORK, CARRY, MOVE]; // 200 points
+    const basicUtiltyBuildmkII = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]; // 550 points
     
     // Variables for general state information
     getBuBRoles();
-    numConSites = Object.keys(Game.constructionSites).length
+    numConSites = Object.keys(Game.constructionSites).length;
     numBUBCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUB').length;
     roomEnergyAvailablePercent = Game.spawns['Spawn1'].room.energyAvailable / Game.spawns['Spawn1'].room.energyCapacityAvailable;
     var roomEnergyAvailable = Game.spawns['Spawn1'].room.energyAvailable;
@@ -27,24 +32,31 @@ module.exports.loop = function () {
     console.log('Harvesters: ' + harvesters.length);
     console.log('Upgraders: ' + upgraders.length);
     console.log('Builders: ' + builders.length);
-    console.log('Construction Sites: ' + numConSites)
+    console.log('Construction Sites: ' + numConSites);
     console.log('BUBs: ' + numBUBCreeps);
     console.log('Energy Available: ' + roomEnergyAvailable + ', ' + roomEnergyAvailablePercent);
-    console.log(Game.time)
+    console.log(Game.time);
 
     // Basic build logic, this creates one creep for every 50 energy available in the room. I have no basis to know if that's a good pace for expansion or not.
-    if(numBUBCreeps < (roomEnergyAvailable / 50)) {
+    
+    if(numBUBCreeps < (roomEnergyAvailable / 50) && bubLevel === 0){ // 200 point BUBs
         let newName = 'BUBworker' + Game.time;
         console.log('Spawning new BUB: ' + newName);
         Game.spawns['Spawn1'].spawnCreep(basicUtiltyBuild, newName,
             {memory: {role: 'harvester', buildType: 'BUB'}});
     }
+    if (numBUBCreeps < (roomEnergyAvailable / 100) && bubLevel === 1){ // 550 point BUBs
+        let newName = 'BUB Mk.II' + Game.time;
+        console.log('Spawning new BUB: ' + newName);
+        Game.spawns['Spawn1'].spawnCreep(basicUtiltyBuild, newName,
+            {memory: {role: 'harvester', buildType: 'BUBmkII'}});
+    }
 
-    if ((Game.time % 0) === 0){
+    // Allocate roles every 5 ticks.
+    if ((Game.time % 5) === 0){
         allocateRoles();
     }
     
-
     // Run each creep according to its role.
     for (let name in Game.creeps){
         let creep = Game.creeps[name];
