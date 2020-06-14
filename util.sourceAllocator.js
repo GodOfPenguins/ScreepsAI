@@ -1,6 +1,6 @@
-sourceNumFreeSpots = [3, 3, 0, 1];
-var sourceCounter = 0
-var nextSource = 0
+const sourceNumFreeSpots = [3, 3, 0, 1];
+var sourceCounter = 0;
+var nextSource = 0;
 
 function getNextSource(){
     let val = nextSource;
@@ -14,5 +14,8 @@ function getNextSource(){
     }
 }
 
+module.exports = {
+    getNextSource
+}
 // I need to find a good way to programmatically determine how many free spots are next to any given source
 // to make this code generalisable.

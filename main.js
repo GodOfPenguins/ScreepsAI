@@ -6,6 +6,7 @@ var harvesters;
 var upgraders;
 var builders;
 var bubs;
+var bub2s;
 var roomEnergyAvailablePercent;
 var numBUBCreeps;
 var numBUBmkiiCreeps
@@ -33,33 +34,34 @@ module.exports.loop = function () {
     getBuBRoles();
     numConSites = Object.keys(Game.constructionSites).length;
     numBUBCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUB').length;
-    numBUBCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUBmkII').length;
+    numBUBmkiiCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUBmkII').length;
     roomEnergyAvailablePercent = Game.spawns['Spawn1'].room.energyAvailable / Game.spawns['Spawn1'].room.energyCapacityAvailable;
     var roomEnergyAvailable = Game.spawns['Spawn1'].room.energyAvailable;
     bubs = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUB');
+    bub2s = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUBmkII')
     
     // Console output for debugging and status monitoring
     console.log('Harvesters: ' + harvesters.length);
     console.log('Upgraders: ' + upgraders.length);
     console.log('Builders: ' + builders.length);
     console.log('Construction Sites: ' + numConSites);
-    console.log('BUBs: ' + numBUBCreeps);
+    console.log('BUBs: ' + numBUBCreeps, );
     console.log('Energy Available: ' + roomEnergyAvailable + ', ' + roomEnergyAvailablePercent);
     console.log(Game.time);
 
     // Basic build logic.
-    
-    if(Game.spawns['Spawn1'].spawning === null){
-        if(numBUBCreeps < (roomEnergyAvailable / 50) && bubLevel === 0){ // 200 point BUBs
+    let currentSpawn = Game.spawns['Spawn1'];
+    if(currentSpawn.spawning === null){
+        if(numBUBCreeps < (currentSpawn.room.energyCapacityAvailable / 50) && bubLevel === 0 && currentSpawn.room.energyAvailable >= 200){ // 200 point BUBs
             let newName = 'BUBworker' + Game.time;
             console.log('Spawning new BUB: ' + newName);
-            Game.spawns['Spawn1'].spawnCreep(basicUtiltyBuild, newName,
+            currentSpawn.spawnCreep(basicUtiltyBuild, newName,
                 {memory: {role: 'harvester', buildType: 'BUB'}});
         }
-        if ((numBUBmkiiCreeps + (numBUBCreeps / 2)) < (roomEnergyAvailable / 100) && bubLevel === 1){ // 550 point BUBs
+        if ((numBUBmkiiCreeps + (numBUBCreeps / 2)) < (currentSpawn.room.energyCapacityAvailable / 100) && bubLevel === 1 && currentSpawn.room.energyAvailable >= 550){ // 550 point BUBs
             let newName = 'BUB Mk.II' + Game.time;
             console.log('Spawning new BUB: ' + newName);
-            Game.spawns['Spawn1'].spawnCreep(basicUtiltyBuild, newName,
+            currentSpawn.spawnCreep(basicUtiltyBuild, newName,
                 {memory: {role: 'harvester', buildType: 'BUBmkII'}});
         }
     }
