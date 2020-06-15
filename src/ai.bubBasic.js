@@ -15,6 +15,10 @@ const globalVariables = require('util.globalVariables');
 //Memory.beCommit;
 //Memory.rpCommit;
 
+var upgraders;
+var builders;
+var harvesters;
+
 var bubBasicAI = {
 
     /** @param {Creep} creep **/
@@ -119,10 +123,14 @@ function determinePriorityRole(creep){
     let upPriority = getUpgradePriority(creep);
     let repairPriority = getRepairPriority(creep);
     let priorities = [harvestPriority, buildPriority, upPriority];
+    getBuBRoles();
     console.log("Priorities: " + priorities);
     let highPriority = 0;
     let highIndex = 0;
     if ((harvestPriority && buildPriority) === 0){
+        return 'upgrader'
+    }
+    else if((upgraders === 0 && harvestPriority < 0.75) || (upgraders === 0 && harvesters > 0)){
         return 'upgrader'
     }
     for(let i = 0; i < priorities.length; i++){
@@ -181,3 +189,9 @@ function getBuildPriority(creep){
 function getRepairPriority(creep){
     return (globalVariables.repairVals[0] - (Memory.rpCommit / 100)) / globalVariables.repairVals[1];
 }
+
+function getBuBRoles(){ // This is a helper function to get how many BUBs are working in each role.
+    harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
+    upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
+    builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+    console.log("BUB role allocation: " + harvesters.length + ", " + upgraders.length+ ", " + builders.length)

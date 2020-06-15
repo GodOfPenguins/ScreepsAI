@@ -52,7 +52,7 @@ let currentSpawn = Game.spawns['Spawn1'];
                 selectedBuild = basicUtiltyBuildmkII;
                 memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
             }
-            else if (adjNeed > 150){
+            else if (adjNeed > 150 && currentSpawn.room.energyAvailable >=300){
                 spawnReady = true;
                 newName = 'BUB' + Game.time;
                 selectedBuild = basicUtiltyBuild;
