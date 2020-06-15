@@ -64,8 +64,10 @@ module.exports.loop = function () {
     // Run the creep AI
     for (let name in Game.creeps){
         let creep = Game.creeps[name];
-        if (creep.memory.buildType == ('BUB' || 'BUBmkII')){
-            bubBasicAI.run(creep);            
+        if (creep.spawning == false){
+            if (creep.memory.buildType == ('BUB' || 'BUBmkII')){
+                bubBasicAI.run(creep);            
+            }
         }
     }
     
