@@ -32,6 +32,7 @@ var bubBasicAI = {
        }
        else if (isHarvesting == false && creepMem.role == null){ // Else assign a role if it doesn't have one
             creepMem.role = determinePriorityRole(creep);
+            commitEng(creep);
        }
        if (isHarvesting == true){
            let sources = creep.room.find(FIND_SOURCES); // Get the room sources and find target
@@ -56,6 +57,7 @@ function runRole(creep){
     let role = creep.memory.role;
     switch (role){
         case 'harvester':
+
             roleHarvester.run(creep);
             break;
         case 'upgrader':
@@ -90,13 +92,34 @@ function deCommitEng(creep){
     }
 }
 
+function commitEng(cree){
+    let typeVal = creep.story.getCapacity();
+    let role = creep.memory.role;
+    switch (role){
+        case 'harvester':
+            Memory.heCommit += typeVal;
+            break;
+        case 'builder':
+            Memory.beCommit += typeVal;
+            break;
+        case 'upgrader':
+            Memory.upCommit += typeVal;
+            break;
+        case 'repairer':
+            Memory.rpCommit += typeval;
+            break;
+        default:
+            console.log(creep + "did not have a role")
+    }
+}
+
 function determinePriorityRole(creep){
     let harvestPriority = getHarvestPriority(creep);
     let buildPriority = getBuildPriority(creep);
     let upPriority = getUpdatePriority(creep);
     let repairPriority = getRepairPriority(creep);
     let priorities = [harvestPriority, buildPriority, upPriority];
-    console.log(priorities);
+    console.log("Priorities: " + priorities);
     let highPriority = 0;
     let highIndex = 0;
     if ((harvestPriority && buildPriority) === 0){
@@ -124,6 +147,9 @@ function determinePriorityRole(creep){
 }
 
 function getHarvestPriority(creep){
+    console.log("Harvest needed: " + globalVariables.harvestNeeded);
+    console.log("Room eng cap: " + creep.room.energyCapacityAvailable);
+    console.log("H eng committed: " + Memory.heCommit);
     return (globalVariables.harvestNeeded - Memory.heCommit) / creep.room.energyCapacityAvailable;
 }
 
