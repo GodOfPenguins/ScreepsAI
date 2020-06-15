@@ -9,8 +9,6 @@ const roleBuilder = require('role.builder');
 const roleUpgrader = require('role.upgrader');
 const getNextSource = require('util.sourceAllocator');
 const globalVariables = require('util.globalVariables');
-const bubEngCommitVal = 50; // How much energy a BUB can commit with
-const bubIIEngCommitVal = 150; // How much energy a BUBmkII can commit with
 
 // Once the task is completed, the BUB should report the task complete and remove the committed energy from the task cue
 //Memory.heCommit; // Just making a note of them so I can find them later.
@@ -22,6 +20,7 @@ var bubBasicAI = {
     /** @param {Creep} creep **/
     run: function(creep) {
         let creepMem = creep.memory;
+        let isHarvesting = creepMem.harvesting;
        // If out of energy, and not already allocated to harvesting
        if(creep.store[RESOURCE_ENERGY] === 0 && creepMem.harvesting == false){
             deCommitEng(creep); // I need to dynamically roll deCommitting in to energy expenditure so I can better account for it.
@@ -32,7 +31,7 @@ var bubBasicAI = {
             creepMem.targetSourceIndex = getNextSource.getNextSource();
        }
        else if (isHarvesting == false && role == null){ // Else assign a role if it doesn't have one
-
+            creepMem.role = determinePriorityRole(creep);
        }
        if (isHarvesting){
            let sources = creep.room.find(FIND_SOURCES); // Get the room sources and find target
@@ -45,24 +44,29 @@ var bubBasicAI = {
             }
         }
         else if (creepMem.role){
-            switch (creepMem.role){
-                case 'harvester':
-                    roleHarvester.run(creep);
-                    break;
-                case 'upgrader':
-                    roleUpgrader.run(creep);
-                    break;
-                case 'builder':
-                    roleBuilder.run(creep);
-                    break;
-                default:
-                    console.log(creep + ' has an undefined role.')
-            }
+            runRole(creep);
         }
     }
 }
 
 module.exports = bubBasicAI;
+
+function runRole(creep){
+    role = creep.memory.role;
+    switch (role){
+        case 'harvester':
+            roleHarvester.run(creep);
+            break;
+        case 'upgrader':
+            roleUpgrader.run(creep);
+            break;
+        case 'builder':
+            roleBuilder.run(creep);
+            break;
+        default:
+            console.log(creep + ' has an undefined role.')
+    }
+}
 
 function deCommitEng(creep){
     typeVal = creep.store.getCapacity();

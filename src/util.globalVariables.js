@@ -22,7 +22,7 @@ function getRepairVals(){
     let hits = 0;
     let maxHits = 0;
     for (let s in structures){
-        struct = structures[s];
+        let struct = structures[s];
         hits += struct.hits;
         maxHits += struct.hitsMax;
     }
@@ -34,7 +34,7 @@ var repairVals = getRepairVals();
 var energyTotal = Game.spawns['Spawn1'].room.energyCapacityAvailable;
 var harvestNeeded = getHarvNeed();
 //This figure is the amount of energy work that the colony needs at any moment.
-var totalNeed = (buildNeeded + harvestNeeded) - (Memory.beCommit + Memory.heCommit)
+var totalNeed = (buildVals[0] + harvestNeeded) - (Memory.beCommit + Memory.heCommit)
 
 module.exports = {
     buildVals, // [buildNeeded, totalBuildAmount]
