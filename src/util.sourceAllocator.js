@@ -10,6 +10,7 @@ function getNextSource(){
     let n;
     let lON = 0;
     let lOS = 0; // "Least objectionable solution"
+    let target = 0;
     for (let i = 0; i < maxSpotsPerSource.length; i++){
         m = maxSpotsPerSource[i];
         n = numAllocated[i];        
@@ -28,13 +29,13 @@ function getNextSource(){
         }
     }
     if (index){
-        Memory.sourceAlloc[index]++;
-        return index;
+        target = index;
     }
     else{
-        Memory.sourceAlloc[index]++;
-        return lOS;
+        target = lOS;
     }
+    Memory.sourceAlloc[target]++;
+    return target
 }
 
 module.exports = getNextSource;
