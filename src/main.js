@@ -1,5 +1,6 @@
 const getEnergy = require('util.sourceAllocator');
 const bubBasicAI = require('ai.bubBasic');
+const manageDead = require('util.clearDeadCreeps');
 
 var harvesters;
 var upgraders;
@@ -10,6 +11,7 @@ var numBUBCreeps;
 var numBUBmkiiCreeps
 var numConSites;
 var bubLevel = 0;
+var clearDeadInterval = 50; // How often dead creeps should be purged from memory
 
 // Allocate some spots in Memory if they don't exist.
 if (Memory.sourceAlloc == null){
@@ -24,11 +26,10 @@ if (Memory.heCommit == null){
 
 module.exports.loop = function () {
     console.log(Game.time);
-    var roomEnergyAvailable = Game.spawns['Spawn1'].room.energyAvailable;
 
-    if((Game.time % 20) === 0){clearDeadCreeps()} 
+    if((Game.time % clearDeadInterval) === 0){manageDead.clearDeadCreeps()} 
 
-    if(bubLevel === 0 && roomEnergyAvailable >= 550){
+    if(bubLevel === 0 && Game.spawns['Spawn1'].room.energyAvailable >= 550){
         bubLevel = 1;
     }
 
@@ -56,7 +57,7 @@ module.exports.loop = function () {
         if ((numBUBmkiiCreeps + (numBUBCreeps / 2)) < (currentSpawn.room.energyCapacityAvailable / 100) && bubLevel === 1 && currentSpawn.room.energyAvailable >= 550){ // 550 point BUBs
             let newName = 'BUB Mk.II' + Game.time;
             console.log('Spawning new BUB: ' + newName);
-            currentSpawn.spawnCreep(basicUtiltyBuild, newName,
+            currentSpawn.spawnCreep(basicUtiltyBuildmkII, newName,
                 {memory: {role: null, harvesting: false, buildType: 'BUBmkII'}});
         }
     }
@@ -78,37 +79,4 @@ function getBuBRoles(){ // This is a helper function to get how many BUBs are wo
     upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     console.log("BUB role allocation: " + harvesters.length + ", " + upgraders.length+ ", " + builders.length)
-}
-
-function clearDeadCreeps(){
-    for(var name in Memory.creeps) {
-        if(!Game.creeps[name]) {
-            creep = creeps[name];
-            role = creep.memory.role;
-            engVal = creep.store.getFreeCapacity((RESOURCE_ENERGY));
-            switch (role){
-                case 'harvester':
-                    Memory.heCommit -= engVal;
-                    break;
-                case 'builder':
-                    Memory.beCommit -= engVal;
-                    break;
-                case 'upgrader':
-                    Memory.upCommit -= engVal;
-                    break;
-                case 'repairer':
-                    Memory.rpCommit -= engVal;
-                    break;
-                default:
-                    console.log(creep + "did not have a role")
-            }
-            delete Memory.creeps[name];
-            console.log('Clearing non-existing creep memory:', name);
-            /*
-            for (let creep in Game.creeps){
-                creep.say(getRandomMessage(creep, role));
-            }
-            */
-        }
-    }
 }
