@@ -1,6 +1,11 @@
 const basicUtiltyBuild = [WORK, CARRY, MOVE]; // 200 points, "Bub" :D
 const basicUtiltyBuildmkII = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]; // 550 points
 const defenderMKi = [ATTACK, ATTACK, MOVE, MOVE]; // 300 points
+var numBUBCreeps;
+var numBUBmkiiCreeps;
+
+numBUBCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUB').length;
+numBUBmkiiCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUBmkII').length;
     
 function spawnerLogic(){
 let currentSpawn = Game.spawns['Spawn1'];

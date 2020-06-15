@@ -6,11 +6,6 @@ const spawnerManagement = require('util.spawnerLogic');
 var harvesters;
 var upgraders;
 var builders;
-var bubs;
-var bub2s;
-var numBUBCreeps;
-var numBUBmkiiCreeps
-var numConSites;
 var bubLevel = 0;
 var clearDeadInterval = 50; // How often dead creeps should be purged from memory
 
@@ -34,15 +29,7 @@ module.exports.loop = function () {
         bubLevel = 1;
     }
 
-    
-    // Variables for general state information
-    numConSites = Object.keys(Game.constructionSites).length;
-    numBUBCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUB').length;
-    numBUBmkiiCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUBmkII').length;
-    bubs = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUB');
-    bub2s = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUBmkII')
-
-    // Basic build logic. Need to rewrite into something more elegant.
+    // Link to spawner logic
     spawnerManagement.spawnerLogic();
     
     // Run the creep AI
