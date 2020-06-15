@@ -29,6 +29,7 @@ var bubBasicAI = {
             creepMem.harvesting = true; // Set to harvest
             creepMem.role = null; // Remove role
             creepMem.targetSourceIndex = sourceAllocator.getNextSource();
+            console.log(creep + " targeting source " + creepMem.targetSourceIndex);
        }
        else if (isHarvesting == false && creepMem.role == null){ // Else assign a role if it doesn't have one
             creepMem.role = determinePriorityRole(creep);
@@ -149,9 +150,6 @@ function getHarvestPriority(creep){
     let engCap = creep.room.energyCapacityAvailable;
     let engAv = creep.room.energyAvailable;
     let need = engCap - engAv;
-    console.log("Harvest needed: " + globalVariables.harvestNeeded);
-    console.log("Room eng cap: " + creep.room.energyCapacityAvailable);
-    console.log("H eng committed: " + Memory.heCommit);
     return (need - Memory.heCommit) / engCap;
 }
 
