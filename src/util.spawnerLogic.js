@@ -4,9 +4,7 @@ const defenderMKi = [ATTACK, ATTACK, MOVE, MOVE]; // 300 points
     
 function spawnerLogic(){
 let currentSpawn = Game.spawns['Spawn1'];
-    let isSpawning = currentSpawn.spawning == false;
-
-    
+    let isSpawning = currentSpawn.spawning == false;  
     if(!isSpawning){
         let spawnReady = false
         let newName = null;
@@ -59,6 +57,6 @@ let currentSpawn = Game.spawns['Spawn1'];
     }
 }
 
-function calculateWorkShortfall(){
-    
+module.exports = {
+    spawnerLogic
 }
