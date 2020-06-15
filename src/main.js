@@ -1,5 +1,5 @@
 const getEnergy = require('util.sourceAllocator');
-const bubBasicAI = require('./bubBasicAI');
+const bubBasicAI = require('ai.bubBasic');
 
 var harvesters;
 var upgraders;
