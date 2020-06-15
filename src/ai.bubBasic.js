@@ -33,13 +33,13 @@ var bubBasicAI = {
        else if (isHarvesting == false && creepMem.role == null){ // Else assign a role if it doesn't have one
             creepMem.role = determinePriorityRole(creep);
        }
-       if (isHarvesting){
+       if (isHarvesting == true){
            let sources = creep.room.find(FIND_SOURCES); // Get the room sources and find target
            let target = sources[creep.memory.targetSourceIndex];
            if(creep.harvest(target) == ERR_NOT_IN_RANGE){ // Try to harvest
                 creep.moveTo(target, {visualizePathStyle: {stroke: '#ffaa00'}}); // Move is not in range
             }
-           if (creep.store.getFreeCapacity === 0){ // If at capacity, stop harvesting
+           if (creep.store[RESOURCE_ENERGY].getFreeCapacity == 0){ // If at capacity, stop harvesting
                creepMem.harvesting = false;
             }
         }
