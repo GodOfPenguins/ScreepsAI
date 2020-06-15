@@ -7,7 +7,7 @@
 const roleHarvester = require("role.harvester");
 const roleBuilder = require('role.builder');
 const roleUpgrader = require('role.upgrader');
-const getNextSource = require('util.sourceAllocator');
+const sourceAllocator = require('util.sourceAllocator');
 const globalVariables = require('util.globalVariables');
 
 // Once the task is completed, the BUB should report the task complete and remove the committed energy from the task cue
@@ -28,7 +28,7 @@ var bubBasicAI = {
                                 // Best might be to locally store the commit on the creep and then audit the numbers every few ticks.
             creepMem.harvesting = true; // Set to harvest
             creepMem.role = null; // Remove role
-            creepMem.targetSourceIndex = getNextSource.getNextSource();
+            creepMem.targetSourceIndex = sourceAllocator.getNextSource();
        }
        else if (isHarvesting == false && creepMem.role == null){ // Else assign a role if it doesn't have one
             creepMem.role = determinePriorityRole(creep);
