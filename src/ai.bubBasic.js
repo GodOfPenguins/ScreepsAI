@@ -57,7 +57,6 @@ function runRole(creep){
     let role = creep.memory.role;
     switch (role){
         case 'harvester':
-
             roleHarvester.run(creep);
             break;
         case 'upgrader':
@@ -92,7 +91,7 @@ function deCommitEng(creep){
     }
 }
 
-function commitEng(cree){
+function commitEng(creep){
     let typeVal = creep.story.getCapacity();
     let role = creep.memory.role;
     switch (role){
