@@ -36,6 +36,7 @@ function getNextSource(){
         target = lOS;
     }
     allocated[target]++;
+    console.log(allocated);
     Memory.sourceAlloc = allocated;
     return target
 }
