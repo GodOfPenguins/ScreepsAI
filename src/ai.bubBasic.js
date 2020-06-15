@@ -88,7 +88,7 @@ function deCommitEng(creep){
             Memory.rpCommit -= typeval;
             break;
         default:
-            console.log(creep + "did not have a role")
+            console.log(creep + "did not have a role");
     }
 }
 
