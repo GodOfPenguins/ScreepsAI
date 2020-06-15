@@ -13,11 +13,9 @@ const bubEngCommitVal = 50; // How much energy a BUB can commit with
 const bubIIEngCommitVal = 150; // How much energy a BUBmkII can commit with
 
 // Once the task is completed, the BUB should report the task complete and remove the committed energy from the task cue
-var harvestEngCommit = Memory.heCommit; // Not really using these here, just making a note of them so I can find them later.
-var buildEngCommit = Memory.beCommit;
-var sourceAlloc = Memory.sourceAlloc;
-var nextSource = Memory.nextSource[0];
-// creep.memory.engCommitted is the amount of energy committed to the current role
+//Memory.heCommit; // Just making a note of them so I can find them later.
+//Memory.beCommit;
+//Memory.rpCommit;
 
 var bubBasicAI = {
 
@@ -26,7 +24,9 @@ var bubBasicAI = {
         let creepMem = creep.memory;
        // If out of energy, and not already allocated to harvesting
        if(creep.store[RESOURCE_ENERGY] === 0 && creepMem.harvesting == false){
-            deCommitEng(creepMem);
+            deCommitEng(creep); // I need to dynamically roll deCommitting in to energy expenditure so I can better account for it.
+                                // If the creep is destroyed before disposing of its total energy, the commit amount will be off.
+                                // Best might be to locally store the commit on the creep and then audit the numbers every few ticks.
             creepMem.harvesting = true; // Set to harvest
             creepMem.role = null; // Remove role
             creepMem.targetSourceIndex = getNextSource.getNextSource();
@@ -65,35 +65,70 @@ var bubBasicAI = {
 
 module.exports = bubBasicAI;
 
-function getEngCommitVal(creepMem){
-    let typeVal;
-    switch (creepMem.buildType){
-        case 'BUB':
-            typeVal = bubEngCommitVal;
-            break;
-         case 'BUBmkII':
-             typeVal = bubIIEngCommitVal;
-             break;
-         default:
-             typeVal = bubEngCommitVal;
-    }
-    return typeVal;
-}
-
-function deCommitEng(creepMem){
-    typeVal = getEngCommitVal(creepMem);
+function deCommitEng(creep){
+    typeVal = creep.store.getCapacity();
     switch (role){
         case 'harvester':
             Memory.heCommit -= typeVal;
             break;
         case 'builder':
-            memory.beCommit -= typeVal;
+            Memory.beCommit -= typeVal;
             break;
+        case 'upgrader':
+            Memory.upCommit -= typeVal;
+            break;
+        default:
+            console.log(creep + "was previously assigned an invalid role")
     }
 }
 
-function determinePriorityRole(){
-    let heNeed = globalVariables.harvestNeeded;
-    let beNeed = globalVariables.buildNeeded;
- 
+function determinePriorityRole(creep){
+    let harvestPriority = getHarvestPriority(creep);
+    let buildPriority = getBuildPriority(creep);
+    let upPriority = getUpdatePriority(creep);
+    let repairPriority = null;
+    let priorities = [harvestPriority, buildPriority, upPriority];
+    let highPriority = 0;
+    let highIndex = 0;
+    if ((harvestPriority && buildPriority) === 0){
+        return 'upgrader'
+    }
+    for(let i = 0; i < priorities.length; i++){
+        let val = priorities[i];
+        if (val > highPriority){
+            highPriority = val;
+            highIndex = i;
+        }
+    }
+    switch (highIndex){
+        case 0:
+            return 'harvester';
+            break;
+        case 1:
+            return 'builder';
+            break;
+        case 2:
+            return 'upgrader';
+            break;
+        default:
+            return null;
+    }
+}
+
+function getHarvestPriority(creep){
+    return (globalVariables.harvestNeeded - Memory.heCommit) / creep.room.energyCapacityAvailable;
+}
+
+function getUpdatePriority(creep){
+    let upTicksPriority = Math.sin((creep.room.controller.ticksToDowngrade / 10000) * (Math.PI / 2))
+    let upProgPriority = creep.room.controller.progress / creep.room.controller.progressTotal;
+    return (0.75 * upTicksPriority) + (0.25 * upProgPriority);
+}
+
+function getBuildPriority(creep){
+    return (globalVariables.buildVals[0] - Memory.beCommit) / globalVariables.buildVals[1];
+}
+
+function getRepairPriority(creep){
+    return (globalVariables.repairVals[0] - (Memory.rpCommit / 100)) / globalVariables.repairVals[1];
 }
