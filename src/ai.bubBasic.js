@@ -44,10 +44,6 @@ var bubBasicAI = {
                creepMem.harvesting = false;
                Memory.sourceAlloc[creepMem.targetSourceIndex]--;
             }
-            if(creepMem.targetSourceIndex = null){ // This should fix the first BUB spawning with bad settings.
-                creepMem.harvesting = false;
-                creepMem.role = null;
-            }
         }
         else if (creepMem.role){
             runRole(creep);
@@ -166,7 +162,7 @@ function getUpgradePriority(creep){
 }
 
 function getBuildPriority(creep){
-    let sites = creep.room.find(FIND_CONSTRUCTION_SITES);
+    let conSites = creep.room.find(FIND_CONSTRUCTION_SITES);
     let buildNeed = 0;
     let buildTot = 0
     for (let c in conSites){
