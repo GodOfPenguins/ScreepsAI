@@ -51,13 +51,13 @@ module.exports.loop = function () {
             let newName = 'BUBworker' + Game.time;
             console.log('Spawning new BUB: ' + newName);
             currentSpawn.spawnCreep(basicUtiltyBuild, newName,
-                {memory: {role: null, buildType: 'BUB'}});
+                {memory: {role: null, harvesting: false, buildType: 'BUB'}});
         }
         if ((numBUBmkiiCreeps + (numBUBCreeps / 2)) < (currentSpawn.room.energyCapacityAvailable / 100) && bubLevel === 1 && currentSpawn.room.energyAvailable >= 550){ // 550 point BUBs
             let newName = 'BUB Mk.II' + Game.time;
             console.log('Spawning new BUB: ' + newName);
             currentSpawn.spawnCreep(basicUtiltyBuild, newName,
-                {memory: {role: null, buildType: 'BUBmkII'}});
+                {memory: {role: null, harvesting: false, buildType: 'BUBmkII'}});
         }
     }
     
