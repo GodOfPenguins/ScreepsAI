@@ -41,6 +41,8 @@ let currentSpawn = Game.spawns['Spawn1'];
             for(let s in currentSpawn.room.find(FIND_MY_STRUCTURES)){rNeed += s.hitsMax - s.hits};
             let bubEngCap = (numBUBCreeps + (numBUBmkiiCreeps * 3) ) * 50;
             let adjNeed = (hNeed + bNeed + rNeed) - bubEngCap;
+            console.log("Needs: " + [hNeed, bNeed, rNeed]);
+            console.log("BUB Carry Cap: " + bubEngCap);
             console.log("Ajusted total need: " + adjNeed);
             if (adjNeed > 300 && currentSpawn.room.energyCapacityAvailable > 500){
                 spawnReady = true
