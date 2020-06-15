@@ -22,7 +22,7 @@ var bubBasicAI = {
         let creepMem = creep.memory;
         let isHarvesting = creepMem.harvesting;
        // If out of energy, and not already allocated to harvesting
-       if(creep.store[RESOURCE_ENERGY] === 0 && creepMem.harvesting == (false || null)){
+       if(creep.store[RESOURCE_ENERGY] === 0 && creepMem.harvesting == false){
             deCommitEng(creep); // I need to dynamically roll deCommitting in to energy expenditure so I can better account for it.
                                 // If the creep is destroyed before disposing of its total energy, the commit amount will be off.
                                 // Best might be to locally store the commit on the creep and then audit the numbers every few ticks.
@@ -85,7 +85,7 @@ function deCommitEng(creep){
             Memory.rpCommit -= typeval;
             break;
         default:
-            console.log(creep + "was previously assigned an invalid role")
+            console.log(creep + "did not have a role")
     }
 }
 
