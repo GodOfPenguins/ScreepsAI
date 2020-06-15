@@ -26,10 +26,14 @@ function getRepairVals(){
 var buildVals = getBuildNeed();
 var repairVals = getRepairVals();
 var energyTotal = Game.spawns['Spawn1'].room.energyCapacityAvailable;
+
+ticksPerCtlrLevel = [1, 20000, 10000, 20000, 40000, 80000, 120000, 150000, 200000]
+
 //This figure is the amount of energy work that the colony needs at any moment.
 
 module.exports = {
     buildVals, // [buildNeeded, totalBuildAmount]
     repairVals, // [hits, maxHits]
-    energyTotal
+    energyTotal,
+    ticksPerCtlrLevel
 }

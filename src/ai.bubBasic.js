@@ -37,6 +37,7 @@ var bubBasicAI = {
        }
        else if (isHarvesting == false && creepMem.role == null){ // Else assign a role if it doesn't have one
             creepMem.role = determinePriorityRole(creep);
+            console.log(creep + " assigned to " + creepMem.role)
             commitEng(creep);
        }
        if (isHarvesting == true){
@@ -127,10 +128,10 @@ function determinePriorityRole(creep){
     console.log("Priorities: " + priorities);
     let highPriority = 0;
     let highIndex = 0;
-    if ((harvestPriority && buildPriority) === 0){
+    if (harvestPriority === 0 && buildPriority === 0){
         return 'upgrader'
     }
-    else if((upgraders === 0 && harvestPriority < 0.75) || (upgraders === 0 && harvesters > 0)){
+    else if((harvesters > 0 || builders > 0) && upgraders == 0){
         return 'upgrader'
     }
     for(let i = 0; i < priorities.length; i++){
@@ -162,9 +163,9 @@ function getHarvestPriority(creep){
 }
 
 function getUpgradePriority(creep){ // This isn't right... I need to do something different.
-    let upTicksPriority = Math.sin((creep.room.controller.ticksToDowngrade / 10000) * (Math.PI / 2));
+    let upTicksPriority = 1 - (Math.sin((creep.room.controller.ticksToDowngrade / globalVariables.ticksperCtlrLevel[creep.room.controller.level]) * (Math.PI / 2)));
     let upProgPriority = creep.room.controller.progress / creep.room.controller.progressTotal;
-    return (0.75 * upTicksPriority) + (0.25 * upProgPriority);
+    return (0.75 * upTicksPriority);
 }
 
 function getBuildPriority(creep){
@@ -195,3 +196,4 @@ function getBuBRoles(){ // This is a helper function to get how many BUBs are wo
     upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     console.log("BUB role allocation: " + harvesters.length + ", " + upgraders.length+ ", " + builders.length)
+}
