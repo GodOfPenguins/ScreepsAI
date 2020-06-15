@@ -33,17 +33,19 @@ let currentSpawn = Game.spawns['Spawn1'];
         // Address shortfalls
         
         if(!spawnReady){
-            let hNeed = (currentSpawn.room.energyCapacity - currentSpawn.energyCapacityAvailable - Memory.heCommit);
+            let hNeed = (currentSpawn.room.energyAvailable + Memory.heCommit - currentSpawn.room.energyCapacityAvailable);
             let bNeed = 0;
-            for(let s in currentSpawn.room.find(FIND_MY_CONSTRUCTION_SITES)){bNeed += s.progressTotal - s.progress};
+            let sites = currentSpawn.room.find(FIND_MY_CONSTRUCTION_SITES);
+            for(let c in sites){bNeed += sites[c].progressTotal - sites[c].progress};
             if(isNaN(bNeed)){bNeed = 0}
             let rNeed = 0;
-            for(let s in currentSpawn.room.find(FIND_MY_STRUCTURES)){rNeed += s.hitsMax - s.hits};
+            let structs = currentSpawn.room.find(FIND_MY_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType != STRUCTURE_CONTROLLER)
+            }});
+            for(let s in structs){rNeed += structs[s].hitsMax - structs[s].hits};
             let bubEngCap = (numBUBCreeps + (numBUBmkiiCreeps * 3) ) * 50;
             let adjNeed = (hNeed + bNeed + rNeed) - bubEngCap;
-            console.log("Needs: " + [hNeed, bNeed, rNeed]);
-            console.log("BUB Carry Cap: " + bubEngCap);
-            console.log("Ajusted total need: " + adjNeed);
             if (adjNeed > 300 && currentSpawn.room.energyCapacityAvailable > 500){
                 spawnReady = true
                 newName = 'BUB Mk.II' + Game.time;
