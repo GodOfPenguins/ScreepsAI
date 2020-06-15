@@ -1,6 +1,7 @@
 const getEnergy = require('util.sourceAllocator');
 const bubBasicAI = require('ai.bubBasic');
 const manageDead = require('util.clearDeadCreeps');
+const spawnerManagement = require('util.spawnerLogic');
 
 var harvesters;
 var upgraders;
@@ -33,10 +34,6 @@ module.exports.loop = function () {
         bubLevel = 1;
     }
 
-    const basicUtiltyBuild = [WORK, CARRY, MOVE]; // 200 points, "Bub" :D
-    const basicUtiltyBuildmkII = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]; // 550 points
-    
-    const defenderMKi = [ATTACK, ATTACK, MOVE, MOVE]; // 300 points
     
     // Variables for general state information
     numConSites = Object.keys(Game.constructionSites).length;
@@ -47,18 +44,20 @@ module.exports.loop = function () {
 
     // Basic build logic. Need to rewrite into something more elegant.
     let currentSpawn = Game.spawns['Spawn1'];
-    if(currentSpawn.spawning === null){
+    let isSpawning = currentSpawn.spawning == false;
+    if(!isSpawning){
         let spawnReady = false
         let newName = null;
         let selectedBuild = null;
         let memoryOptions = null;
         if(numBUBCreeps < (currentSpawn.room.energyCapacityAvailable / 50) && bubLevel === 0 && currentSpawn.room.energyAvailable >= 200){ // 200 point BUBs
+            spawnReady = true;
             newName = 'BUB' + Game.time;
             selectedBuild = basicUtiltyBuild;
             memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
         }
         else if ((numBUBmkiiCreeps + (numBUBCreeps / 2)) < (currentSpawn.room.energyCapacityAvailable / 100) && bubLevel === 1 && currentSpawn.room.energyAvailable >= 550){ // 550 point BUBs
-            spawnReady == true
+            spawnReady = true
             newName = 'BUB Mk.II' + Game.time;
             selectedBuild = basicUtiltyBuildmkII;
             memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};

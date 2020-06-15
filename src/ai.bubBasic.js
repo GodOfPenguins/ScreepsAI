@@ -44,6 +44,10 @@ var bubBasicAI = {
                creepMem.harvesting = false;
                Memory.sourceAlloc[creepMem.targetSourceIndex]--;
             }
+            if(creepMem.targetSourceIndex = null){ // This should fix the first BUB spawning with bad settings.
+                creepMem.harvesting = false;
+                creepMem.role = null;
+            }
         }
         else if (creepMem.role){
             runRole(creep);
@@ -92,7 +96,7 @@ function deCommitEng(creep){
 }
 
 function commitEng(creep){
-    let typeVal = creep.story.getCapacity();
+    let typeVal = creep.store.getCapacity();
     let role = creep.memory.role;
     switch (role){
         case 'harvester':
@@ -115,7 +119,7 @@ function commitEng(creep){
 function determinePriorityRole(creep){
     let harvestPriority = getHarvestPriority(creep);
     let buildPriority = getBuildPriority(creep);
-    let upPriority = getUpdatePriority(creep);
+    let upPriority = getUpgradePriority(creep);
     let repairPriority = getRepairPriority(creep);
     let priorities = [harvestPriority, buildPriority, upPriority];
     console.log("Priorities: " + priorities);
@@ -146,20 +150,38 @@ function determinePriorityRole(creep){
 }
 
 function getHarvestPriority(creep){
+    let engCap = creep.room.energyCapacityAvailable;
+    let engAv = creep.room.energyAvailable;
+    let need = engCap - engAv;
     console.log("Harvest needed: " + globalVariables.harvestNeeded);
     console.log("Room eng cap: " + creep.room.energyCapacityAvailable);
     console.log("H eng committed: " + Memory.heCommit);
-    return (globalVariables.harvestNeeded - Memory.heCommit) / creep.room.energyCapacityAvailable;
+    return (need - Memory.heCommit) / engCap;
 }
 
-function getUpdatePriority(creep){
-    let upTicksPriority = Math.sin((creep.room.controller.ticksToDowngrade / 10000) * (Math.PI / 2))
+function getUpgradePriority(creep){
+    let upTicksPriority = Math.sin((creep.room.controller.ticksToDowngrade / 10000) * (Math.PI / 2));
     let upProgPriority = creep.room.controller.progress / creep.room.controller.progressTotal;
     return (0.75 * upTicksPriority) + (0.25 * upProgPriority);
 }
 
 function getBuildPriority(creep){
-    return (globalVariables.buildVals[0] - Memory.beCommit) / globalVariables.buildVals[1];
+    let sites = creep.room.find(FIND_CONSTRUCTION_SITES);
+    let buildNeed = 0;
+    let buildTot = 0
+    for (let c in conSites){
+        let p = conSites[c].progress;
+        let t = conSites[c].progressTotal;
+        buildNeed += (t - p);
+        buildTot += t
+    } 
+    let priority = (buildNeed - Memory.beCommit) / buildTot;
+    if (!isNaN(priority)){ //If there are no construction sites.
+        return priority;
+    }
+    else{
+        return 0;
+    }
 }
 
 function getRepairPriority(creep){
