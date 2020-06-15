@@ -48,17 +48,24 @@ module.exports.loop = function () {
     // Basic build logic. Need to rewrite into something more elegant.
     let currentSpawn = Game.spawns['Spawn1'];
     if(currentSpawn.spawning === null){
+        let spawnReady = false
+        let newName = null;
+        let selectedBuild = null;
+        let memoryOptions = null;
         if(numBUBCreeps < (currentSpawn.room.energyCapacityAvailable / 50) && bubLevel === 0 && currentSpawn.room.energyAvailable >= 200){ // 200 point BUBs
-            let newName = 'BUBworker' + Game.time;
-            console.log('Spawning new BUB: ' + newName);
-            currentSpawn.spawnCreep(basicUtiltyBuild, newName,
-                {memory: {role: null, harvesting: false, buildType: 'BUB'}});
+            newName = 'BUB' + Game.time;
+            selectedBuild = basicUtiltyBuild;
+            memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
         }
-        if ((numBUBmkiiCreeps + (numBUBCreeps / 2)) < (currentSpawn.room.energyCapacityAvailable / 100) && bubLevel === 1 && currentSpawn.room.energyAvailable >= 550){ // 550 point BUBs
-            let newName = 'BUB Mk.II' + Game.time;
+        else if ((numBUBmkiiCreeps + (numBUBCreeps / 2)) < (currentSpawn.room.energyCapacityAvailable / 100) && bubLevel === 1 && currentSpawn.room.energyAvailable >= 550){ // 550 point BUBs
+            spawnReady == true
+            newName = 'BUB Mk.II' + Game.time;
+            selectedBuild = basicUtiltyBuildmkII;
+            memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
+        }
+        if (spawnReady == true){
+            currentSpawn.spawnCreep(selectedBuild, newName, memoryOptions);
             console.log('Spawning new BUB: ' + newName);
-            currentSpawn.spawnCreep(basicUtiltyBuildmkII, newName,
-                {memory: {role: null, harvesting: false, buildType: 'BUBmkII'}});
         }
     }
     
