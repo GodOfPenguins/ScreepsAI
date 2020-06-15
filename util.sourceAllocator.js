@@ -1,7 +1,7 @@
 const maxSpotsPerSource = [3, 3, 0, 1];
-var numAllocated = [0, 0, 0, 0];
-var sourceCounter = 0;
-var nextSource = 0;
+var numAllocated = Memory.sourceAlloc; // in format [0, 0, 0, 0]
+var nextSource = Memory.nextSource[0]; // in format [nextSource, sourceCount]
+var sourceCount = Memory.nextSource[1];
 
 function reserveSpot(){
     let index = null;
@@ -63,3 +63,17 @@ var getEnergy = {
 module.exports = getEnergy;
 // I need to find a good way to programmatically determine how many free spots are next to any given source
 // to make this code generalisable.
+
+
+{
+    let conSites = creep.room.find(FIND_CONSTRUCTION_SITES)
+    let constructNeed = 0 ;
+    let currentConstruct = 0;
+    for(let c in conSites){constructNeed += conSite[c].progressTotal; constructNeed += conSite[c].progress;}
+    
+}
+
+
+{
+        
+}

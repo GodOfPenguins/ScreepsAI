@@ -8,11 +8,27 @@ var upgraders;
 var builders;
 var bubs;
 var bub2s;
-var roomEnergyAvailablePercent;
 var numBUBCreeps;
 var numBUBmkiiCreeps
 var numConSites;
 var bubLevel = 0;
+
+var harvestEngCommit = Memory.heCommit; // Not really using these here, just making a note of them so I can find them later.
+var buildEngCommit = Memory.beCommit;
+var sourceAlloc = Memory.sourceAlloc;
+var nextSource = Memory.nextSource;
+if (sourceAlloc == null){
+    sourceAlloc = [0, 0, 0, 0];
+}
+if (buildEngCommit == null){
+    buildEngCommit = 0;
+}
+if (harvestEngCommit == null){
+    harvestEngCommit = 0;
+}
+if (nextSource == null){
+    nextSource = [0, 0]
+}
 
 module.exports.loop = function () {
     console.log(Game.time);
