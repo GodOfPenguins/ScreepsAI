@@ -35,12 +35,13 @@ var bubBasicAI = {
        }
        if (isHarvesting == true){
            let sources = creep.room.find(FIND_SOURCES); // Get the room sources and find target
-           let target = sources[creep.memory.targetSourceIndex];
+           let target = sources[creepMem.targetSourceIndex];
            if(creep.harvest(target) == ERR_NOT_IN_RANGE){ // Try to harvest
                 creep.moveTo(target, {visualizePathStyle: {stroke: '#ffaa00'}}); // Move is not in range
             }
-           if (creep.store[RESOURCE_ENERGY].getFreeCapacity == 0){ // If at capacity, stop harvesting
+           if (creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0){ // If at capacity, stop harvesting
                creepMem.harvesting = false;
+               Memory.sourceAlloc[creepMem.targetSourceIndex]--;
             }
         }
         else if (creepMem.role){
