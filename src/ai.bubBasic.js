@@ -70,7 +70,7 @@ function runRole(creep){
 
 function deCommitEng(creep){
     let typeVal = creep.store.getCapacity();
-    role = creep.memory.role;
+    let role = creep.memory.role;
     switch (role){
         case 'harvester':
             Memory.heCommit -= typeVal;
