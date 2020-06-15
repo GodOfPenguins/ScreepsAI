@@ -96,6 +96,7 @@ function determinePriorityRole(creep){
     let upPriority = getUpdatePriority(creep);
     let repairPriority = getRepairPriority(creep);
     let priorities = [harvestPriority, buildPriority, upPriority];
+    console.log(priorities);
     let highPriority = 0;
     let highIndex = 0;
     if ((harvestPriority && buildPriority) === 0){
