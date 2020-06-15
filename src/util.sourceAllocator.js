@@ -38,6 +38,8 @@ function getNextSource(){
     return target
 }
 
-module.exports = getNextSource;
+module.exports = {
+    getNextSource
+}
 // I need to find a good way to programmatically determine how many free spots are next to any given source
 // to make this code generalisable.
