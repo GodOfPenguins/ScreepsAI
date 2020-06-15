@@ -30,7 +30,6 @@ var bubBasicAI = {
             creepMem.harvesting = true; // Set to harvest
             creepMem.role = null; // Remove role
             creepMem.targetSourceIndex = getNextSource.getNextSource();
-            creep.say('🔄 harvest');
        }
        else if (isHarvesting == false && role == null){ // Else assign a role if it doesn't have one
 
@@ -77,6 +76,9 @@ function deCommitEng(creep){
         case 'upgrader':
             Memory.upCommit -= typeVal;
             break;
+        case 'repairer':
+            Memory.rpCommit -= typeval;
+            break;
         default:
             console.log(creep + "was previously assigned an invalid role")
     }
@@ -86,7 +88,7 @@ function determinePriorityRole(creep){
     let harvestPriority = getHarvestPriority(creep);
     let buildPriority = getBuildPriority(creep);
     let upPriority = getUpdatePriority(creep);
-    let repairPriority = null;
+    let repairPriority = getRepairPriority(creep);
     let priorities = [harvestPriority, buildPriority, upPriority];
     let highPriority = 0;
     let highIndex = 0;
@@ -103,13 +105,12 @@ function determinePriorityRole(creep){
     switch (highIndex){
         case 0:
             return 'harvester';
-            break;
         case 1:
             return 'builder';
-            break;
         case 2:
             return 'upgrader';
-            break;
+        case 3:
+            return 'repairer'
         default:
             return null;
     }
