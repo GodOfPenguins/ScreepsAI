@@ -43,30 +43,7 @@ module.exports.loop = function () {
     bub2s = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUBmkII')
 
     // Basic build logic. Need to rewrite into something more elegant.
-    let currentSpawn = Game.spawns['Spawn1'];
-    let isSpawning = currentSpawn.spawning == false;
-    if(!isSpawning){
-        let spawnReady = false
-        let newName = null;
-        let selectedBuild = null;
-        let memoryOptions = null;
-        if(numBUBCreeps < (currentSpawn.room.energyCapacityAvailable / 50) && bubLevel === 0 && currentSpawn.room.energyAvailable >= 200){ // 200 point BUBs
-            spawnReady = true;
-            newName = 'BUB' + Game.time;
-            selectedBuild = basicUtiltyBuild;
-            memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
-        }
-        else if ((numBUBmkiiCreeps + (numBUBCreeps / 2)) < (currentSpawn.room.energyCapacityAvailable / 100) && bubLevel === 1 && currentSpawn.room.energyAvailable >= 550){ // 550 point BUBs
-            spawnReady = true
-            newName = 'BUB Mk.II' + Game.time;
-            selectedBuild = basicUtiltyBuildmkII;
-            memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
-        }
-        if (spawnReady == true){
-            currentSpawn.spawnCreep(selectedBuild, newName, memoryOptions);
-            console.log('Spawning new BUB: ' + newName);
-        }
-    }
+    spawnerManagement.spawnerLogic();
     
     // Run the creep AI
     for (let name in Game.creeps){
