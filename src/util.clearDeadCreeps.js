@@ -31,6 +31,6 @@ function clearDeadCreeps(){
     }
 }
 
-module.export = {
+module.exports = {
     clearDeadCreeps
 }
