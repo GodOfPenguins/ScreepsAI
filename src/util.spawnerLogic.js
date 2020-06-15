@@ -35,12 +35,12 @@ let currentSpawn = Game.spawns['Spawn1'];
         if(!spawnReady){
             let hNeed = (currentSpawn.room.energyCapacity - currentSpawn.energyCapacityAvailable - Memory.heCommit);
             let bNeed = 0;
-            for(s in currentSpawn.room.find(FIND_MY_CONSTRUCTION_SITES)){bNeed += s.progressTotal - s.progress};
+            for(let s in currentSpawn.room.find(FIND_MY_CONSTRUCTION_SITES)){bNeed += s.progressTotal - s.progress};
             if(isNaN(bNeed)){bNeed = 0}
             let rNeed = 0;
-            for(s in currentSpawn.room.find(FIND_MY_STRUCTURES)){rNeed += s.hitsMax - s.hits};
-            bubEngCap = (numBUBCreeps + (numBUBmkiiCreeps * 3) ) * 50;
-            adjNeed = (hNeed + bNeed + rNeed) - bubEngCap;
+            for(let s in currentSpawn.room.find(FIND_MY_STRUCTURES)){rNeed += s.hitsMax - s.hits};
+            let bubEngCap = (numBUBCreeps + (numBUBmkiiCreeps * 3) ) * 50;
+            let adjNeed = (hNeed + bNeed + rNeed) - bubEngCap;
             if (adjNeed > 300 && currentSpawn.room.energyCapacityAvailable > 500){
                 spawnReady = true
                 newName = 'BUB Mk.II' + Game.time;
