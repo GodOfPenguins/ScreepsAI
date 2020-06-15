@@ -6,7 +6,6 @@ const spawnerManagement = require('util.spawnerLogic');
 var harvesters;
 var upgraders;
 var builders;
-var bubLevel = 0;
 var clearDeadInterval = 50; // How often dead creeps should be purged from memory
 
 // Allocate some spots in Memory if they don't exist.
@@ -24,10 +23,6 @@ module.exports.loop = function () {
     console.log(Game.time);
 
     if((Game.time % clearDeadInterval) === 0){manageDead.clearDeadCreeps()} 
-
-    if(bubLevel === 0 && Game.spawns['Spawn1'].room.energyAvailable >= 550){
-        bubLevel = 1;
-    }
 
     // Link to spawner logic
     spawnerManagement.spawnerLogic();

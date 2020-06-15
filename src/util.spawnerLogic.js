@@ -18,13 +18,13 @@ let currentSpawn = Game.spawns['Spawn1'];
 
         //General population level maintinance, based on energy
 
-        if(numBUBCreeps < (currentSpawn.room.energyCapacityAvailable / 50) && bubLevel === 0 && currentSpawn.room.energyAvailable >= 200){ // 200 point BUBs
+        if(numBUBCreeps < (currentSpawn.room.energyCapacityAvailable / 50) && currentSpawn.room.energyCapacityAvailable < 550 && currentSpawn.room.energyAvailable >= 200){ // 200 point BUBs
             spawnReady = true;
             newName = 'BUB' + Game.time;
             selectedBuild = basicUtiltyBuild;
             memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
         }
-        else if (((numBUBmkiiCreeps * 3) + numBUBCreeps) < (currentSpawn.room.energyCapacityAvailable / 50) && bubLevel === 1 && currentSpawn.room.energyAvailable >= 550){ // 550 point BUBs
+        else if (((numBUBmkiiCreeps * 3) + numBUBCreeps) < (currentSpawn.room.energyCapacityAvailable / 50) && currentSpawn.room.energyCapacityAvailable >= 550 && currentSpawn.room.energyAvailable >= 550){ // 550 point BUBs
             spawnReady = true
             newName = 'BUB Mk.II' + Game.time;
             selectedBuild = basicUtiltyBuildmkII;
