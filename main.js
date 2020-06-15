@@ -1,6 +1,3 @@
-const roleHarvester = require('role.harvester');
-const roleUpgrader = require('role.upgrader');
-const roleBuilder = require('role.builder');
 const getEnergy = require('util.sourceAllocator');
 
 var harvesters;
@@ -13,21 +10,15 @@ var numBUBmkiiCreeps
 var numConSites;
 var bubLevel = 0;
 
-var harvestEngCommit = Memory.heCommit; // Not really using these here, just making a note of them so I can find them later.
-var buildEngCommit = Memory.beCommit;
-var sourceAlloc = Memory.sourceAlloc;
-var nextSource = Memory.nextSource;
-if (sourceAlloc == null){
-    sourceAlloc = [0, 0, 0, 0];
+// Allocate some spots in Memory if they don't exist.
+if (Memory.sourceAlloc == null){
+    Memory.sourceAlloc = [0, 0, 0, 0];
 }
-if (buildEngCommit == null){
-    buildEngCommit = 0;
+if (Memory.beCommit == null){
+    Memory.beCommit = 0;
 }
-if (harvestEngCommit == null){
-    harvestEngCommit = 0;
-}
-if (nextSource == null){
-    nextSource = [0, 0]
+if (Memory.heCommit == null){
+    Memory.heCommit = 0;
 }
 
 module.exports.loop = function () {

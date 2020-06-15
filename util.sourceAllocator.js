@@ -1,9 +1,10 @@
-const maxSpotsPerSource = [3, 3, 0, 1];
-var numAllocated = Memory.sourceAlloc; // in format [0, 0, 0, 0]
-var nextSource = Memory.nextSource[0]; // in format [nextSource, sourceCount]
-var sourceCount = Memory.nextSource[1];
+// This will eventually need to be managed at a per-room level... somehow
+// Also might be nice to take transit-time towards a source into account.
 
-function reserveSpot(){
+const maxSpotsPerSource = [3, 3, 0, 1]; // Only valid for the sim room.
+var numAllocated = Memory.sourceAlloc; // in format [0, 0, 0, 0]
+
+function getNextSource(){
     let index = null;
     let m;
     let n;
@@ -27,53 +28,15 @@ function reserveSpot(){
         }
     }
     if (index){
-        numAllocated[index]++
+        Memory.sourceAlloc[index]++;
         return index;
     }
     else{
-        numAllocated[index]++
+        Memory.sourceAlloc[index]++;
         return lOS;
     }
 }
 
-var getEnergy = {
-    /** @param {Creep} creep **/
-    run: function(creep) {
-        creep.memory.building = false;
-        creep.memory.upgrading = false;
-        let sources = creep.room.find(FIND_SOURCES);
-        if(creep.store.getFreeCapacity() > 0){
-            if (creep.memory.targetSourceIndex == null){
-                let targetIndex = reserveSpot();
-                creep.memory.targetSourceIndex = targetIndex;
-            }
-            let target = sources[creep.memory.targetSourceIndex];
-            if(creep.harvest(target) == ERR_NOT_IN_RANGE){
-                creep.moveTo(target, {visualizePathStyle: {stroke: '#ffaa00'}});
-            }
-        }
-        else{
-            creep.memory.harvesting = false;
-            numAllocated[creep.memory.targetSourceIndex]--; // Deallocate the used slot.
-            creep.memory.targetSourceIndex = null;
-        }
-    }
-}
-
-module.exports = getEnergy;
+module.exports = getNextSource;
 // I need to find a good way to programmatically determine how many free spots are next to any given source
 // to make this code generalisable.
-
-
-{
-    let conSites = creep.room.find(FIND_CONSTRUCTION_SITES)
-    let constructNeed = 0 ;
-    let currentConstruct = 0;
-    for(let c in conSites){constructNeed += conSite[c].progressTotal; constructNeed += conSite[c].progress;}
-    
-}
-
-
-{
-        
-}
