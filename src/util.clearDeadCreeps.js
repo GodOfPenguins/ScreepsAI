@@ -2,10 +2,9 @@ function clearDeadCreeps(){
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
             let creep = Memory.creeps[name];
-            let role = creep.memory.role;
-            let engVal = creep.store.getFreeCapacity((RESOURCE_ENERGY));
-            if (role){
-                switch (role){
+            if (creep.memory.role){
+                let engVal = creep.store.getFreeCapacity((RESOURCE_ENERGY));
+                switch (creep.memory.role){
                     case 'harvester':
                         Memory.heCommit -= engVal;
                         break;

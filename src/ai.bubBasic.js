@@ -153,7 +153,7 @@ function getHarvestPriority(creep){
     return (need - Memory.heCommit) / engCap;
 }
 
-function getUpgradePriority(creep){
+function getUpgradePriority(creep){ // This isn't right... I need to do something different.
     let upTicksPriority = Math.sin((creep.room.controller.ticksToDowngrade / 10000) * (Math.PI / 2));
     let upProgPriority = creep.room.controller.progress / creep.room.controller.progressTotal;
     return (0.75 * upTicksPriority) + (0.25 * upProgPriority);
