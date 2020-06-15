@@ -1,3 +1,5 @@
+// Currently unused and (obviously) unfinished.
+
 var roleMiner = {
 
     /** @param {Creep} creep **/
