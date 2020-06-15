@@ -6,7 +6,7 @@ const maxSpotsPerSource = [3, 3, 0, 1]; // Only valid for the sim room.
 
 function getNextSource(){
     let index = null;
-    allocated = Memory.sourceAlloc;
+    let allocated = Memory.sourceAlloc;
     let m;
     let n;
     let lON = 0;
@@ -36,7 +36,6 @@ function getNextSource(){
         target = lOS;
     }
     allocated[target]++;
-    console.log(allocated);
     Memory.sourceAlloc = allocated;
     return target
 }
