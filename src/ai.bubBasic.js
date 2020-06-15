@@ -30,7 +30,7 @@ var bubBasicAI = {
             creepMem.role = null; // Remove role
             creepMem.targetSourceIndex = getNextSource.getNextSource();
        }
-       else if (isHarvesting == false && role == null){ // Else assign a role if it doesn't have one
+       else if (isHarvesting == false && creepMem.role == null){ // Else assign a role if it doesn't have one
             creepMem.role = determinePriorityRole(creep);
        }
        if (isHarvesting){
@@ -52,7 +52,7 @@ var bubBasicAI = {
 module.exports = bubBasicAI;
 
 function runRole(creep){
-    role = creep.memory.role;
+    let role = creep.memory.role;
     switch (role){
         case 'harvester':
             roleHarvester.run(creep);
