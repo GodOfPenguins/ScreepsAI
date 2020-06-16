@@ -22,10 +22,10 @@ let currentSpawn = Game.spawns['Spawn1'];
             spawnBUBmkII(currentSpawn);
             break;
         }
-        
+
         // Address shortfalls
         
-        adjNeed = getEnergyNeed(currentSpawn);
+        let adjNeed = getEnergyNeed(currentSpawn);
 
 
         if (adjNeed > 300 && currentSpawn.room.energyAvailable > 500){
@@ -48,16 +48,16 @@ module.exports = {
 }
 
 function spawnBUB(currentSpawn){
-    newName = 'BUB' + Game.time;
-    selectedBuild = basicUtiltyBuild;
-    memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
+    let newName = 'BUB' + Game.time;
+    let selectedBuild = basicUtiltyBuild;
+    let memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
     currentSpawn.spawnCreep(selectedBuild, newName, memoryOptions);
 }
 
 function spawnBUBmkII(currentSpawn){
-    newName = 'BUB Mk.II' + Game.time;
-    selectedBuild = basicUtiltyBuildmkII;
-    memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUBmkII'}};
+    let newName = 'BUB Mk.II' + Game.time;
+    let selectedBuild = basicUtiltyBuildmkII;
+    let memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUBmkII'}};
     currentSpawn.spawnCreep(selectedBuild, newName, memoryOptions)        
 }
 
