@@ -58,6 +58,12 @@ let currentSpawn = Game.spawns['Spawn1'];
                 selectedBuild = basicUtiltyBuild;
                 memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
             }
+            else if (currentSpawn.room.find(FIND_MY_CREEPS).length === 0 && currentSpawn.room.energyAvailable === 200){
+                spawnReady = true;
+                newName = 'BUB' + Game.time;
+                selectedBuild = basicUtiltyBuild;
+                memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
+            }
         }
             
         if (spawnReady == true){
@@ -69,4 +75,11 @@ let currentSpawn = Game.spawns['Spawn1'];
 
 module.exports = {
     spawnerLogic
+}
+
+function spawnBUB(currentSpawn){
+    newName = 'BUB' + Game.time;
+    selectedBuild = basicUtiltyBuild;
+    memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
+    currentSpawn.spawnCreep(selectedBuild, newName, memoryOptions);
 }
