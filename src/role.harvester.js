@@ -1,4 +1,5 @@
 const { before } = require("lodash");
+const roleUpgrader = require("role.upgrader")
 
 var roleHarvester = {
 
@@ -16,8 +17,8 @@ var roleHarvester = {
             }
         }
         else{
-            creep.memory.roll = 'upgrader'
-            Memory.heCommit -= creep.store.getCapacity[RESOURCE_ENERGY]
+            Memory.heCommit -= creep.store.getCapacity[RESOURCE_ENERGY];
+            roleUpgrader.run(creep);
         }
         if(creep.store[RESOURCE_ENERGY] == 0) {
             creep.memory.role = null;
