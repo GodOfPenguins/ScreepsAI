@@ -10,8 +10,8 @@ numBUBmkiiCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'B
 function spawnerLogic(){
 let currentSpawn = Game.spawns['Spawn1'];
     let isSpawning = currentSpawn.spawning == false;  
-    if(!isSpawning){
-        let spawnReady = false
+    let spawnReady = false;
+        if(!isSpawning){
         let newName = null;
         let selectedBuild = null;
         let memoryOptions = null;
@@ -46,7 +46,7 @@ let currentSpawn = Game.spawns['Spawn1'];
             for(let s in structs){rNeed += structs[s].hitsMax - structs[s].hits};
             let bubEngCap = (numBUBCreeps + (numBUBmkiiCreeps * 3) ) * 50;
             let adjNeed = (hNeed + bNeed + rNeed) - bubEngCap;
-            if (adjNeed > 300 && currentSpawn.room.energyCapacityAvailable > 500){
+            if (adjNeed > 300 && currentSpawn.room.energyAvailable > 500){
                 spawnReady = true
                 newName = 'BUB Mk.II' + Game.time;
                 selectedBuild = basicUtiltyBuildmkII;
