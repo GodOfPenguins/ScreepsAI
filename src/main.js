@@ -1,24 +1,19 @@
-const getEnergy = require('util.sourceAllocator');
 const bubBasicAI = require('ai.bubBasic');
 const manageDead = require('util.clearDeadCreeps');
 const spawnerManagement = require('util.spawnerLogic');
+const roomMemory = require('util.allocRoomMemory');
 
 var clearDeadInterval = 50; // How often dead creeps should be purged from memory
 
 // Allocate some spots in Memory if they don't exist.
-if (Memory.sourceAlloc == null){
-    Memory.sourceAlloc = [0, 0, 0, 0];
-}
-if (Memory.beCommit == null){
-    Memory.beCommit = 0;
-}
-if (Memory.heCommit == null){
-    Memory.heCommit = 0;
-}
+
+
+
 
 module.exports.loop = function () {
     console.log(Game.time);
-
+    
+    if(Memory.updateRoomMemorySettings != true){ roomMemory.allocRoomMemory() }
     if((Game.time % clearDeadInterval) === 0){manageDead.clearDeadCreeps()} 
 
     // Link to spawner logic
