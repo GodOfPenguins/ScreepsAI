@@ -2,9 +2,9 @@ function clearDeadCreeps(){
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
             let creep = Memory.creeps[name];
-            if (creep.memory.role){
+            if (creep.role){
                 let engVal = creep.store.getFreeCapacity((RESOURCE_ENERGY));
-                switch (creep.memory.role){
+                switch (creep.role){
                     case 'harvester':
                         Memory.heCommit -= engVal;
                         break;
@@ -20,8 +20,8 @@ function clearDeadCreeps(){
                     default:
                 }
             }
-            else if (creep.memory.harvesting == true){
-                Memory.sourceAlloc[creep.memory.targetSourceIndex]--;
+            else if (creep.harvesting == true){
+                Memory.sourceAlloc[creep.targetSourceIndex]--;
             }
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);

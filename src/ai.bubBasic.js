@@ -123,7 +123,7 @@ function determinePriorityRole(creep){
     let buildPriority = getBuildPriority(creep);
     let upPriority = getUpgradePriority(creep);
     let repairPriority = getRepairPriority(creep);
-    let priorities = [harvestPriority, buildPriority, upPriority];
+    let priorities = [harvestPriority, buildPriority, upPriority, 0];
     getBuBRoles();
     console.log("Priorities: " + priorities);
     let highPriority = 0;
@@ -131,7 +131,7 @@ function determinePriorityRole(creep){
     if (harvestPriority === 0 && buildPriority === 0){
         return 'upgrader'
     }
-    else if((harvesters > 0 || builders > 0) && upgraders == 0){
+    else if((harvesters.length > 0 || builders.length > 0) && upgraders.length == 0){
         return 'upgrader'
     }
     for(let i = 0; i < priorities.length; i++){
@@ -163,9 +163,12 @@ function getHarvestPriority(creep){
 }
 
 function getUpgradePriority(creep){ // This isn't right... I need to do something different.
-    let upTicksPriority = 1 - (Math.sin((creep.room.controller.ticksToDowngrade / globalVariables.ticksperCtlrLevel[creep.room.controller.level]) * (Math.PI / 2)));
-    let upProgPriority = creep.room.controller.progress / creep.room.controller.progressTotal;
-    return (0.75 * upTicksPriority);
+    let controlLevel = creep.room.controller.level;
+    let tickMax = globalVariables.ticksPerCtlrLevel[controlLevel];
+    let ttD = creep.room.controller.ticksToDowngrade;
+    let upTicksPriority = 1 - (Math.sin((ttD / tickMax) * (Math.PI / 2)));
+    // let upProgPriority = creep.room.controller.progress / creep.room.controller.progressTotal;
+    return (upTicksPriority);
 }
 
 function getBuildPriority(creep){
