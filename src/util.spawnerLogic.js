@@ -16,11 +16,11 @@ let currentSpawn = Game.spawns['Spawn1'];
 
         if(numBUBCreeps < (currentSpawn.room.energyCapacityAvailable / 50) && currentSpawn.room.energyCapacityAvailable < 550 && currentSpawn.room.energyAvailable >= 200){ // 200 point BUBs
             spawnBUB(currentSpawn);
-            break;
+            return;
         }
         else if (((numBUBmkiiCreeps * 3) + numBUBCreeps) < (currentSpawn.room.energyCapacityAvailable / 50) && currentSpawn.room.energyCapacityAvailable >= 550 && currentSpawn.room.energyAvailable >= 550){ // 550 point BUBs
             spawnBUBmkII(currentSpawn);
-            break;
+            return;
         }
 
         // Address shortfalls
@@ -30,15 +30,15 @@ let currentSpawn = Game.spawns['Spawn1'];
 
         if (adjNeed > 300 && currentSpawn.room.energyAvailable > 500){
             spawnBUBmkII(currentSpawn);  
-            break;
+            return;
         }
         else if (adjNeed > 150 && currentSpawn.room.energyAvailable >=300){
             spawnBUB(currentSpawn)    
-            break;        
+            return;        
         }
         else if (currentSpawn.room.find(FIND_MY_CREEPS).length === 0 && currentSpawn.room.energyAvailable === 200){
             spawnBUB(currentSpawn);
-            break;
+            return;
         }      
     }
 }
