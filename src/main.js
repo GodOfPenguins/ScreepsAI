@@ -3,9 +3,6 @@ const bubBasicAI = require('ai.bubBasic');
 const manageDead = require('util.clearDeadCreeps');
 const spawnerManagement = require('util.spawnerLogic');
 
-var harvesters;
-var upgraders;
-var builders;
 var clearDeadInterval = 50; // How often dead creeps should be purged from memory
 
 // Allocate some spots in Memory if they don't exist.
