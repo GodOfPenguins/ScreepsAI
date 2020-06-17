@@ -32,7 +32,7 @@ function spawnerLogic(spawn){
             spawnBUB(spawn)    
             return;        
         }
-        else if ((numBUBCreeps + numBUBmkiiCreeps) == 0 && spawn.room.energyAvailable === 200){
+        else if ((numBUBCreeps + numBUBmkiiCreeps) == 0 && spawn.room.energyAvailable >= 200){
             spawnBUB(spawn);
             return;
         } 
