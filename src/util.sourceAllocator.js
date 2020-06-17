@@ -1,12 +1,10 @@
 // This will eventually need to be managed at a per-room level... somehow
 // Also might be nice to take transit-time towards a source into account.
 
-const maxSpotsPerSource = [3, 3, 0, 1]; // Only valid for the sim room.
-// Memory.sourceAlloc; // in format [0, 0, 0, 0]
-
-function getNextSource(){
+function getNextSource(room){
     let index = null;
-    let allocated = Memory.sourceAlloc;
+    let maxSpotsPerSource = room.memory.maxSpotsPerSource;
+    let allocated = room.memory.sourceAlloc;
     let m;
     let n;
     let lON = 0;
@@ -36,7 +34,7 @@ function getNextSource(){
         target = lOS;
     }
     allocated[target]++;
-    Memory.sourceAlloc = allocated;
+    room.memory.sourceAlloc = allocated;
     return target
 }
 

@@ -14,8 +14,19 @@ function allocRoomMemory(){
         if (roomMem.rpCommit == null){
             roomMem.rpCommit = 0;
         }
+        getRoomSourceOpenSpaceArray(spawn.room);
     }
-    Memory.updateRoomMemorySettings = true;
+    Memory.updateRoomMemorySettings = false;
+}
+
+function getRoomSourceOpenSpaceArray(room){
+    let sources = room.find(FIND_SOURCES);
+    let sourceSlots = []
+    for (let i = 0; i < sources.length; i++){
+        val = checkSourceSlots(sources[i]);
+        sourceSlots[i] = val;
+    }
+    room.memory.maxSpotsPerSource = sourceSlots;
 }
 
 function checkSourceSlots(source){

@@ -13,7 +13,7 @@ var clearDeadInterval = 50; // How often dead creeps should be purged from memor
 module.exports.loop = function () {
     console.log(Game.time);
     
-    if(Memory.updateRoomMemorySettings != true){ roomMemory.allocRoomMemory() }
+    if(Memory.updateRoomMemorySettings != false){ roomMemory.allocRoomMemory() }
     if((Game.time % clearDeadInterval) === 0){manageDead.clearDeadCreeps()} 
 
     // Link to spawner logic

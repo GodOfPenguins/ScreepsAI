@@ -85,7 +85,7 @@ function getCreepsInRoom(spawn){
     let creeps = spawn.room.find(FIND_MY_CREEPS);
     if (creeps.length > 0){
         for (let c in creeps){
-            let type = creeps[c].buildType;
+            let type = creeps[c].memory.buildType;
             switch (type){
                 case 'BUB':
                     numBUBCreeps++;
