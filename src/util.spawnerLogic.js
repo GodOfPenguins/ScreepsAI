@@ -7,7 +7,7 @@ var numBUBmkiiCreeps;
 function spawnerLogic(spawn){
 let currentSpawn = spawn;
     let isSpawning = currentSpawn.spawning == false;  
-    
+
     if(!isSpawning){
         getCreepsInRoom(currentSpawn)
         //General population level maintinance, based on energy
@@ -47,14 +47,14 @@ module.exports = {
 }
 
 function spawnBUB(currentSpawn){
-    let newName = 'BUB' + Game.time;
+    let newName = 'BUB_' + Game.time;
     let selectedBuild = basicUtiltyBuild;
     let memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
     currentSpawn.spawnCreep(selectedBuild, newName, memoryOptions);
 }
 
 function spawnBUBmkII(currentSpawn){
-    let newName = 'BUB Mk.II' + Game.time;
+    let newName = 'BUB_mkII_' + Game.time;
     let selectedBuild = basicUtiltyBuildmkII;
     let memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUBmkII'}};
     currentSpawn.spawnCreep(selectedBuild, newName, memoryOptions)        
