@@ -17,7 +17,9 @@ module.exports.loop = function () {
     if((Game.time % clearDeadInterval) === 0){manageDead.clearDeadCreeps()} 
 
     // Link to spawner logic
-    spawnerManagement.spawnerLogic();
+    for (let s in Game.spawns){
+        spawnerManagement.spawnerLogic(Game.spawns[s]);
+    }
     
     // Run the creep AI
     for (let name in Game.creeps){
