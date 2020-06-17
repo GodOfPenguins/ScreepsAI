@@ -11,6 +11,7 @@ function spawnerLogic(spawn){
 
     if(!isSpawning){
         getCreepsInRoom(spawn)
+        alertLevel = spawn.room.memory.alertLevel;
         //General population level maintinance, based on energy
 
         if(numBUBCreeps < (spawn.room.energyCapacityAvailable / 50) && spawn.room.energyCapacityAvailable < 550 && spawn.room.energyAvailable >= 200){ // 200 point BUBs

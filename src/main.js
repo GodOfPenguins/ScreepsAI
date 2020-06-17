@@ -2,6 +2,7 @@ const bubBasicAI = require('ai.bubBasic');
 const manageDead = require('util.clearDeadCreeps');
 const spawnerManagement = require('util.spawnerLogic');
 const roomMemory = require('util.allocRoomMemory');
+const calculateThreat = require('util.calculateThreat');
 
 var clearDeadInterval = 50; // How often dead creeps should be purged from memory
 
@@ -12,8 +13,11 @@ var clearDeadInterval = 50; // How often dead creeps should be purged from memor
 
 module.exports.loop = function () {
     console.log(Game.time);
-    
-    if(Memory.updateRoomMemorySettings != false){ roomMemory.allocRoomMemory() }
+
+    for (let room in Game.rooms){
+        if(room.memory.updateRoomMemorySettings != false){roomMemory.allocRoomMemory(room)}
+        if(room.find(FIND_HOSTILE_CREEPS).length > 0){calculateThreat.calculateRoomThreat(room)}
+    }
     if((Game.time % clearDeadInterval) === 0){manageDead.clearDeadCreeps()} 
 
     // Link to spawner logic

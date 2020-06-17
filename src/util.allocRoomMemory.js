@@ -1,7 +1,5 @@
-function allocRoomMemory(){
-    for (let s in Game.spawns){
-        let spawn = Game.spawns[s];
-        let roomMem = spawn.room.memory;
+function allocRoomMemory(room){
+        let roomMem = room.memory;
         if (roomMem.sourceAlloc == null){
             roomMem.sourceAlloc = [0, 0, 0, 0];
         }
@@ -15,8 +13,8 @@ function allocRoomMemory(){
             roomMem.rpCommit = 0;
         }
         getRoomSourceOpenSpaceArray(spawn.room);
-    }
-    Memory.updateRoomMemorySettings = false;
+
+    roomMem.updateRoomMemorySettings = false;
 }
 
 function getRoomSourceOpenSpaceArray(room){
@@ -46,7 +44,7 @@ function checkSourceSlots(source){
         let item = area[keys[i]];
         let k = Object.keys(item);
         for (let j = 0; j < k.length; j++) {
-            if (item[k[j]] == 'plain' || item[k[j]] == 'marsh' || item[k[j]] == 'road' ){
+            if (item[k[j]] == 'plain' || item[k[j]] == 'marsh'){
                 count++;
             }
         }
