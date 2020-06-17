@@ -5,37 +5,36 @@ var numBUBCreeps;
 var numBUBmkiiCreeps;
     
 function spawnerLogic(spawn){
-let currentSpawn = spawn;
-    let isSpawning = currentSpawn.spawning == false;  
+    let isSpawning = spawn.spawning == false;  
 
     if(!isSpawning){
-        getCreepsInRoom(currentSpawn)
+        getCreepsInRoom(spawn)
         //General population level maintinance, based on energy
 
-        if(numBUBCreeps < (currentSpawn.room.energyCapacityAvailable / 50) && currentSpawn.room.energyCapacityAvailable < 550 && currentSpawn.room.energyAvailable >= 200){ // 200 point BUBs
-            spawnBUB(currentSpawn);
+        if(numBUBCreeps < (spawn.room.energyCapacityAvailable / 50) && spawn.room.energyCapacityAvailable < 550 && spawn.room.energyAvailable >= 200){ // 200 point BUBs
+            spawnBUB(spawn);
             return;
         }
-        else if (((numBUBmkiiCreeps * 3) + numBUBCreeps) < (currentSpawn.room.energyCapacityAvailable / 50) && currentSpawn.room.energyCapacityAvailable >= 550 && currentSpawn.room.energyAvailable >= 550){ // 550 point BUBs
-            spawnBUBmkII(currentSpawn);
+        else if (((numBUBmkiiCreeps * 3) + numBUBCreeps) < (spawn.room.energyCapacityAvailable / 50) && spawn.room.energyCapacityAvailable >= 550 && spawn.room.energyAvailable >= 550){ // 550 point BUBs
+            spawnBUBmkII(spawn);
             return;
         }
 
         // Address shortfalls
         
-        let adjNeed = getEnergyNeed(currentSpawn);
+        let adjNeed = getEnergyNeed(spawn);
 
 
-        if (adjNeed > 300 && currentSpawn.room.energyAvailable > 500){
-            spawnBUBmkII(currentSpawn);  
+        if (adjNeed > 300 && spawn.room.energyAvailable > 500){
+            spawnBUBmkII(spawn);  
             return;
         }
-        else if (adjNeed > 150 && currentSpawn.room.energyAvailable >=300){
-            spawnBUB(currentSpawn)    
+        else if (adjNeed > 150 && spawn.room.energyAvailable >=300){
+            spawnBUB(spawn)    
             return;        
         }
-        else if (currentSpawn.room.find(FIND_MY_CREEPS).length === 0 && currentSpawn.room.energyAvailable === 200){
-            spawnBUB(currentSpawn);
+        else if (spawn.room.find(FIND_MY_CREEPS).length === 0 && spawn.room.energyAvailable === 200){
+            spawnBUB(spawn);
             return;
         } 
     }     
@@ -46,31 +45,31 @@ module.exports = {
     spawnerLogic
 }
 
-function spawnBUB(currentSpawn){
+function spawnBUB(spawn){
     let newName = 'BUB_' + Game.time;
     let selectedBuild = basicUtiltyBuild;
     let memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUB'}};
-    currentSpawn.spawnCreep(selectedBuild, newName, memoryOptions);
+    spawn.spawnCreep(selectedBuild, newName, memoryOptions);
 }
 
-function spawnBUBmkII(currentSpawn){
+function spawnBUBmkII(spawn){
     let newName = 'BUB_mkII_' + Game.time;
     let selectedBuild = basicUtiltyBuildmkII;
     let memoryOptions = {memory: {role: null, harvesting: false, buildType: 'BUBmkII'}};
-    currentSpawn.spawnCreep(selectedBuild, newName, memoryOptions)        
+    spawn.spawnCreep(selectedBuild, newName, memoryOptions)        
 }
 
-function getEnergyNeed(currentSpawn){
+function getEnergyNeed(spawn){
     // Energy collection need
-    let hNeed = (currentSpawn.room.energyAvailable + Memory.heCommit - currentSpawn.room.energyCapacityAvailable);
+    let hNeed = (spawn.room.energyAvailable + Memory.heCommit - spawn.room.energyCapacityAvailable);
     //Build need
     let bNeed = 0;
-    let sites = currentSpawn.room.find(FIND_MY_CONSTRUCTION_SITES);
+    let sites = spawn.room.find(FIND_MY_CONSTRUCTION_SITES);
     for(let c in sites){bNeed += sites[c].progressTotal - sites[c].progress};
     if(isNaN(bNeed)){bNeed = 0}
     // Repair need
     let rNeed = 0;
-    let structs = currentSpawn.room.find(FIND_MY_STRUCTURES, {
+    let structs = spawn.room.find(FIND_MY_STRUCTURES, {
         filter: (structure) => {
             return (structure.structureType != STRUCTURE_CONTROLLER)
     }});
@@ -82,7 +81,9 @@ function getEnergyNeed(currentSpawn){
 }
 
 function getCreepsInRoom(spawn){
+    console.log("Spawn: " + spawn);
     creeps = spawn.room.find(FIND_MY_CREEPS);
+    console.log("Creeps: " + JSON.stringify(creeps));
     if (creeps.length > 0){
         numBUBCreeps = 0;
         numBUBmkiiCreeps = 0;

@@ -18,7 +18,6 @@ module.exports.loop = function () {
 
     // Link to spawner logic
     for (let s in Game.spawns){
-        console.log(Game.spawns[s]);
         spawnerManagement.spawnerLogic(Game.spawns[s]);
     }
     
