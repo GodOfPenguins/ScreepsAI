@@ -83,18 +83,21 @@ function getEnergyNeed(currentSpawn){
 
 function getCreepsInRoom(spawn){
     creeps = spawn.room.find(FIND_MY_CREEPS);
-    numBUBCreeps = 0;
-    numBUBmkiiCreeps = 0;
-    for (let c in creeps){}
-        type = creeps[c].buildType;
-        switch (type){
-            case 'BUB':
-                numBUBCreeps++;
-                break;
-            case 'BUBmkII':
-                numBUBmkiiCreeps++;
-                break;
-            default:
-                console.log(creeps[c] + " is of an unknown Buildtype");
+    if (creeps.length > 0){
+        numBUBCreeps = 0;
+        numBUBmkiiCreeps = 0;
+        for (let c in creeps){
+            type = creeps[c].buildType;
+            switch (type){
+                case 'BUB':
+                    numBUBCreeps++;
+                    break;
+                case 'BUBmkII':
+                    numBUBmkiiCreeps++;
+                    break;
+                default:
+                    console.log(creeps[c] + " is of an unknown Buildtype");
+            }
         }
+    }
 }
