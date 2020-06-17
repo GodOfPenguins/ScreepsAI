@@ -9,6 +9,7 @@ const roleBuilder = require('role.builder');
 const roleUpgrader = require('role.upgrader');
 const sourceAllocator = require('util.sourceAllocator');
 const globalVariables = require('util.globalVariables');
+const roleRepairer = require("./role.repairer");
 
 // Once the task is completed, the BUB should report the task complete and remove the committed energy from the task cue
 //Memory.heCommit; // Just making a note of them so I can find them later.
@@ -71,6 +72,9 @@ function runRole(creep){
         case 'builder':
             roleBuilder.run(creep);
             break;
+        case 'repairer':
+            roleRepairer.run(creep);
+            break;
         default:
             console.log(creep + ' has an undefined role.')
     }
@@ -123,7 +127,7 @@ function determinePriorityRole(creep){
     let buildPriority = getBuildPriority(creep);
     let upPriority = getUpgradePriority(creep);
     let repairPriority = getRepairPriority(creep);
-    let priorities = [harvestPriority, buildPriority, upPriority, 0];
+    let priorities = [harvestPriority, buildPriority, upPriority, repairPriority];
     getBuBRoles();
     console.log("Priorities: " + priorities);
     let highPriority = 0;
@@ -131,8 +135,11 @@ function determinePriorityRole(creep){
     if (harvestPriority === 0 && buildPriority === 0){
         return 'upgrader'
     }
-    else if((harvesters.length > 0 || builders.length > 0) && upgraders.length == 0){
+    else if((harvesters.length > 0 || builders.length > 0) && upgraders.length == 0 && repairPriority == 0){
         return 'upgrader'
+    }
+    else if(repairPriority > 0.5){
+        return 'repairer'
     }
     for(let i = 0; i < priorities.length; i++){
         let val = priorities[i];
