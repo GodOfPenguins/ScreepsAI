@@ -32,7 +32,7 @@ var bubBasicAI = {
                                 // Best might be to locally store the commit on the creep and then audit the numbers every few ticks.
             creepMem.harvesting = true; // Set to harvest
             creepMem.role = null; // Remove role
-            creepMem.targetSourceIndex = sourceAllocator.getNextSource();
+            creepMem.targetSourceIndex = sourceAllocator.getNextSource(creep.room);
             console.log(creep + " targeting source " + creepMem.targetSourceIndex);
        }
        else if (isHarvesting == false && creepMem.role == null){ // Else assign a role if it doesn't have one

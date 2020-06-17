@@ -31,42 +31,28 @@ function getRoomSourceOpenSpaceArray(room){
 
 function checkSourceSlots(source){
     // Establish where to look
-    const terrain = source.room.lookForAtArea(
+    // Establish where to look
+    const area = source.room.lookForAtArea(
         LOOK_TERRAIN,
         source.pos.y - 1,
         source.pos.x -1,
         source.pos.y + 1,
         source.pos.x + 1
     );
-    const structures = source.room.lookForAtArea(
-        LOOK_STRUCTURES,
-        source.pos.y - 1,
-        source.pos.x -1,
-        source.pos.y + 1,
-        source.pos.x + 1
-    )
-    var keys = Object.keys(terrain);
-    const structKeys = Object.keys(structures)
+    const keys = Object.keys(area);
     let count = 0;
     // Scan the area for Plains or Marsh tiles
     for (let i = 0; i < keys.length; i++) {
-        let item = keys[keys[i]];
+        let item = area[keys[i]];
         let k = Object.keys(item);
         for (let j = 0; j < k.length; j++) {
-            if (item[k[j]] == 'plain' || item[k[j]] == 'marsh'){
+            if (item[k[j]] == 'plain' || item[k[j]] == 'marsh' || item[k[j]] == 'road' ){
                 count++;
-            }
-            else if(item[k[j]] == 'wall'){
-                sItem = structKeys[structKeys[i]];
-                sK = Object.keys(sItem);
-                if(sItem[sK[j]] == 'road'){
-                    continue;
-                }
-
             }
         }
     }
-    // Scan for roads
+    return count;
+}
 
 module.exports = {
     allocRoomMemory
