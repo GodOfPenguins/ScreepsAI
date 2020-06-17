@@ -6,9 +6,9 @@ function calculateRoomThreat(room){
         let toughTot = 0;
         let healTot = 0;
             for(let c in enemyCreeps){
-                body = enemyCreeps[c].body;
+                let body = enemyCreeps[c].body;
                 for(let p in body){
-                    partType = body[p].type;
+                    let partType = body[p].type;
                     switch (partType){
                         case 'attack':
                             attackTot++
@@ -25,11 +25,11 @@ function calculateRoomThreat(room){
                     }
                 }
             }
-        atk = attackTot * 80;
-        ratk = rAttackTot * 150;
-        tgh = toughTot * 10;
-        hl = healTot * 250;
-        threat = atk + ratk + tgh + hl;
+        let atk = attackTot * 80;
+        let ratk = rAttackTot * 150;
+        let tgh = toughTot * 10;
+        let hl = healTot * 250;
+        let threat = atk + ratk + tgh + hl;
         return threat;   
     }
 }

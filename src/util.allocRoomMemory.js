@@ -12,7 +12,7 @@ function allocRoomMemory(room){
         if (roomMem.rpCommit == null){
             roomMem.rpCommit = 0;
         }
-        getRoomSourceOpenSpaceArray(spawn.room);
+        getRoomSourceOpenSpaceArray(room);
 
     roomMem.updateRoomMemorySettings = false;
 }
