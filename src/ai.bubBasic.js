@@ -198,7 +198,11 @@ function getBuildPriority(creep){
 }
 
 function getRepairPriority(creep){
-    return (globalVariables.repairVals[0] - (Memory.rpCommit / 100)) / globalVariables.repairVals[1];
+    let rpVal = (globalVariables.repairVals[0] - (Memory.rpCommit / 100)) / globalVariables.repairVals[1];
+    if (isNaN(rpVal)){
+        return 0;
+    }
+    return rpVal;
 }
 
 function getBuBRoles(){ // This is a helper function to get how many BUBs are working in each role.

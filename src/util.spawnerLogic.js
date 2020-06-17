@@ -1,6 +1,8 @@
 const basicUtiltyBuild = [WORK, CARRY, MOVE]; // 200 points, "Bub" :D
 const basicUtiltyBuildmkII = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]; // 550 points
-const defenderMKi = [ATTACK, ATTACK, MOVE, MOVE]; // 300 points
+const alertFighterII = [MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK]; // 390 points
+const alertFighter = [MOVE, MOVE, ATTACK, ATTACK] // 280 points
+const birdOfPreyI = [TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK]
 var numBUBCreeps;
 var numBUBmkiiCreeps;
     
@@ -24,15 +26,19 @@ function spawnerLogic(spawn){
         
         let adjNeed = getEnergyNeed(spawn);
 
-        if (adjNeed > 300 && spawn.room.energyAvailable > 500){
+        if (adjNeed > 300 && spawn.room.energyCapacityAvailable > 500){
             spawnBUBmkII(spawn);  
             return;
         }
-        else if (adjNeed > 150 && spawn.room.energyAvailable >=300){
+        else if (adjNeed > 150 && spawn.room.energyCapcityAvailable >=300){
             spawnBUB(spawn)    
             return;        
         }
-        else if ((numBUBCreeps + numBUBmkiiCreeps) == 0 && spawn.room.energyAvailable >= 200){
+        else if ((numBUBCreeps + numBUBmkiiCreeps) == 0 && spawn.room.energyAvailable >= 550){
+            spawnBUBmkII(spawn);
+            return;
+        }
+            else if ((numBUBCreeps + numBUBmkiiCreeps) == 0 && spawn.room.energyAvailable >= 200){
             spawnBUB(spawn);
             return;
         } 
