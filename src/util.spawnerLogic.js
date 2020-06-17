@@ -81,14 +81,12 @@ function getEnergyNeed(spawn){
 }
 
 function getCreepsInRoom(spawn){
-    console.log("Spawn: " + spawn);
-    creeps = spawn.room.find(FIND_MY_CREEPS);
-    console.log("Creeps: " + JSON.stringify(creeps));
+    let creeps = spawn.room.find(FIND_MY_CREEPS);
     if (creeps.length > 0){
         numBUBCreeps = 0;
         numBUBmkiiCreeps = 0;
         for (let c in creeps){
-            type = creeps[c].buildType;
+            let type = creeps[c].buildType;
             switch (type){
                 case 'BUB':
                     numBUBCreeps++;
