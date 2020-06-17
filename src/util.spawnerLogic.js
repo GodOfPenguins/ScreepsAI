@@ -24,7 +24,6 @@ function spawnerLogic(spawn){
         
         let adjNeed = getEnergyNeed(spawn);
 
-
         if (adjNeed > 300 && spawn.room.energyAvailable > 500){
             spawnBUBmkII(spawn);  
             return;
@@ -33,7 +32,7 @@ function spawnerLogic(spawn){
             spawnBUB(spawn)    
             return;        
         }
-        else if (spawn.room.find(FIND_MY_CREEPS).length === 0 && spawn.room.energyAvailable === 200){
+        else if ((numBUBCreeps + numBUBmkiiCreeps) == 0 && spawn.room.energyAvailable === 200){
             spawnBUB(spawn);
             return;
         } 
@@ -81,10 +80,10 @@ function getEnergyNeed(spawn){
 }
 
 function getCreepsInRoom(spawn){
+    numBUBCreeps = 0;
+    numBUBmkiiCreeps = 0;
     let creeps = spawn.room.find(FIND_MY_CREEPS);
     if (creeps.length > 0){
-        numBUBCreeps = 0;
-        numBUBmkiiCreeps = 0;
         for (let c in creeps){
             let type = creeps[c].buildType;
             switch (type){
