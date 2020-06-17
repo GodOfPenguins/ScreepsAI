@@ -3,15 +3,13 @@ const basicUtiltyBuildmkII = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE,
 const defenderMKi = [ATTACK, ATTACK, MOVE, MOVE]; // 300 points
 var numBUBCreeps;
 var numBUBmkiiCreeps;
-
-numBUBCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUB').length;
-numBUBmkiiCreeps = _.filter(Game.creeps, (creep) => creep.memory.buildType == 'BUBmkII').length;
     
-function spawnerLogic(){
-let currentSpawn = Game.spawns['Spawn1'];
+function spawnerLogic(spawn){
+let currentSpawn = spawn;
     let isSpawning = currentSpawn.spawning == false;  
-        if(!isSpawning){
-
+    
+    if(!isSpawning){
+        getCreepsInRoom(currentSpawn)
         //General population level maintinance, based on energy
 
         if(numBUBCreeps < (currentSpawn.room.energyCapacityAvailable / 50) && currentSpawn.room.energyCapacityAvailable < 550 && currentSpawn.room.energyAvailable >= 200){ // 200 point BUBs
@@ -39,8 +37,9 @@ let currentSpawn = Game.spawns['Spawn1'];
         else if (currentSpawn.room.find(FIND_MY_CREEPS).length === 0 && currentSpawn.room.energyAvailable === 200){
             spawnBUB(currentSpawn);
             return;
-        }      
-    }
+        } 
+    }     
+    
 }
 
 module.exports = {
@@ -80,4 +79,22 @@ function getEnergyNeed(currentSpawn){
     let bubEngCap = (numBUBCreeps + (numBUBmkiiCreeps * 3) ) * 50;
 
     return (hNeed + bNeed + rNeed) - bubEngCap;
+}
+
+function getCreepsInRoom(spawn){
+    creeps = spawn.room.find(FIND_MY_CREEPS);
+    numBUBCreeps = 0;
+    numBUBmkiiCreeps = 0;
+    for (let c in creeps){}
+        type = creeps[c].buildType;
+        switch (type){
+            case 'BUB':
+                numBUBCreeps++;
+                break;
+            case 'BUBmkII':
+                numBUBmkiiCreeps++;
+                break;
+            default:
+                console.log(creeps[c] + " is of an unknown Buildtype");
+        }
 }
