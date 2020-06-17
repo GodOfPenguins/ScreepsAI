@@ -49,7 +49,7 @@ var bubBasicAI = {
             }
            if (creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0){ // If at capacity, stop harvesting
                creepMem.harvesting = false;
-               Memory.sourceAlloc[creepMem.targetSourceIndex]--;
+               creep.room.memory.sourceAlloc[creepMem.targetSourceIndex]--;
             }
         }
         else if (creepMem.role){
@@ -83,18 +83,19 @@ function runRole(creep){
 function deCommitEng(creep){
     let typeVal = creep.store.getCapacity();
     let role = creep.memory.role;
+    let roomMem = creep.room.memory;
     switch (role){
         case 'harvester':
-            Memory.heCommit -= typeVal;
+            roomMem.heCommit -= typeVal;
             break;
         case 'builder':
-            Memory.beCommit -= typeVal;
+            roomMem.beCommit -= typeVal;
             break;
         case 'upgrader':
-            Memory.upCommit -= typeVal;
+            roomMem.upCommit -= typeVal;
             break;
         case 'repairer':
-            Memory.rpCommit -= typeval;
+            roomMem.rpCommit -= typeval;
             break;
         default:
             console.log(creep + "did not have a role");
@@ -104,18 +105,19 @@ function deCommitEng(creep){
 function commitEng(creep){
     let typeVal = creep.store.getCapacity();
     let role = creep.memory.role;
+    let roomMem = creep.room.memory;
     switch (role){
         case 'harvester':
-            Memory.heCommit += typeVal;
+            roomMem.heCommit += typeVal;
             break;
         case 'builder':
-            Memory.beCommit += typeVal;
+            roomMem.beCommit += typeVal;
             break;
         case 'upgrader':
-            Memory.upCommit += typeVal;
+            roomMem.upCommit += typeVal;
             break;
         case 'repairer':
-            Memory.rpCommit += typeval;
+            roomMem.rpCommit += typeval;
             break;
         default:
             console.log(creep + "did not have a role")
@@ -166,7 +168,7 @@ function getHarvestPriority(creep){
     let engCap = creep.room.energyCapacityAvailable;
     let engAv = creep.room.energyAvailable;
     let need = engCap - engAv;
-    return (need - Memory.heCommit) / engCap;
+    return (need - creep.room.memory.heCommit) / engCap;
 }
 
 function getUpgradePriority(creep){ // This isn't right... I need to do something different.
@@ -188,7 +190,7 @@ function getBuildPriority(creep){
         buildNeed += (t - p);
         buildTot += t
     } 
-    let priority = (buildNeed - Memory.beCommit) / buildTot;
+    let priority = (buildNeed - creep.room.memory.beCommit) / buildTot;
     if (!isNaN(priority)){ //If there are no construction sites.
         return priority;
     }
@@ -198,7 +200,8 @@ function getBuildPriority(creep){
 }
 
 function getRepairPriority(creep){
-    let rpVal = (globalVariables.repairVals[0] - (Memory.rpCommit / 100)) / globalVariables.repairVals[1];
+    repairVals = getRepairVals(creep);
+    let rpVal = repairVals[0] - (creep.room.rpCommit / 100) / repairVals[1];
     if (isNaN(rpVal)){
         return 0;
     }
@@ -210,4 +213,16 @@ function getBuBRoles(){ // This is a helper function to get how many BUBs are wo
     upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     console.log("BUB role allocation: " + harvesters.length + ", " + upgraders.length+ ", " + builders.length)
+}
+
+function getRepairVals(creep){
+    let structures = creep.room.find(FIND_STRUCTURES);
+    let hits = 0;
+    let maxHits = 0;
+    for (let s in structures){
+        let struct = structures[s];
+        hits += struct.hits;
+        maxHits += struct.hitsMax;
+    }
+    return [hits, maxHits];
 }
