@@ -15,7 +15,7 @@ module.exports.loop = function () {
     console.log(Game.time);
 
     for (let r in Game.rooms){
-        let room = Games.rooms[r];
+        let room = Game.rooms[r];
         if(room.memory.updateRoomMemorySettings != false){roomMemory.allocRoomMemory(room)}
         if(room.find(FIND_HOSTILE_CREEPS).length > 0){ room.memory.threatLevel = calculateThreat.calculateRoomThreat(room)}
     }
