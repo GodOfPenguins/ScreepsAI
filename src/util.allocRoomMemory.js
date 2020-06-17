@@ -23,7 +23,7 @@ function getRoomSourceOpenSpaceArray(room){
     let sources = room.find(FIND_SOURCES);
     let sourceSlots = []
     for (let i = 0; i < sources.length; i++){
-        val = checkSourceSlots(sources[i]);
+        let val = checkSourceSlots(sources[i]);
         sourceSlots[i] = val;
     }
     room.memory.maxSpotsPerSource = sourceSlots;
@@ -45,20 +45,28 @@ function checkSourceSlots(source){
         source.pos.y + 1,
         source.pos.x + 1
     )
-    const keys = Object.keys(terrain).concat(Object.keys(structures));
+    var keys = Object.keys(terrain);
+    const structKeys = Object.keys(structures)
     let count = 0;
     // Scan the area for Plains or Marsh tiles
     for (let i = 0; i < keys.length; i++) {
-        let item = area[keys[i]];
+        let item = keys[keys[i]];
         let k = Object.keys(item);
         for (let j = 0; j < k.length; j++) {
-            if (item[k[j]] == 'plain' || item[k[j]] == 'marsh' || item[k[j]] == 'road' ){
+            if (item[k[j]] == 'plain' || item[k[j]] == 'marsh'){
                 count++;
+            }
+            else if(item[k[j]] == 'wall'){
+                sItem = structKeys[structKeys[i]];
+                sK = Object.keys(sItem);
+                if(sItem[sK[j]] == 'road'){
+                    continue;
+                }
+
             }
         }
     }
-    return count;
-}
+    // Scan for roads
 
 module.exports = {
     allocRoomMemory
