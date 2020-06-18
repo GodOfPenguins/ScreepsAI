@@ -99,6 +99,7 @@ function spawnAutomatedMiner(spawn){
     body = [];
     while (engAv >= 100){
         body.push(WORK);
+        engAv -= 100;
     }
     memoryOptions = {memory: {role:'autoMiner', needTractor: true, buildType:'autoMiner'}};
     spawn.spawnCreep(body, newName, memoryOptions);    
@@ -165,6 +166,7 @@ function getCreepsInRoom(spawn){
     numBUBmkiiCreeps = 0;
     numAutoMinerCreeps = 0;
     numAlertFighters = 0;
+    let parts = 0;
     let creeps = spawn.room.find(FIND_MY_CREEPS);
     if (creeps.length > 0){
         for (let c in creeps){
@@ -177,14 +179,14 @@ function getCreepsInRoom(spawn){
                     numBUBmkiiCreeps++;
                     break;
                 case 'autoMiner':
-                    let parts = creeps[c].getActiveBodyParts(WORK)
+                    parts = creeps[c].getActiveBodyparts(WORK)
                     numAutoMinerCreeps += parts;
-                    if(creeps.memory.needTractor = true){
+                    if(creeps[c].memory.needTractor == true){
                         tractorNeeded = true;
                     }
                     break;
                 case 'hauler':
-                    let parts = creeps[c].getActiveBodyParts(CARRY);
+                    parts = creeps[c].getActiveBodyparts(CARRY);
                     numHaulerCreeps += parts;
                 case 'alertFighter':
                     numAlertFighters++;

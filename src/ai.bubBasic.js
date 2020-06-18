@@ -131,7 +131,7 @@ function determinePriorityRole(creep){
     let upPriority = getUpgradePriority(creep);
     let repairPriority = getRepairPriority(creep);
     let priorities = [harvestPriority, buildPriority, upPriority, repairPriority];
-    getBuBRoles();
+    getBuBRoles(creep);
     console.log("Priorities: " + priorities);
     let highPriority = 0;
     let highIndex = 0;
@@ -209,7 +209,7 @@ function getRepairPriority(creep){
     return rpVal;
 }
 
-function getBuBRoles(){ // This is a helper function to get how many BUBs are working in each role.
+function getBuBRoles(creep){ // This is a helper function to get how many BUBs are working in each role.
     let roomCreeps = creep.room.find(FIND_MY_CREEPS);
     harvesters = _.filter(roomCreeps, (creep) => creep.memory.role == 'harvester');
     upgraders = _.filter(roomCreeps, (creep) => creep.memory.role == 'upgrader');

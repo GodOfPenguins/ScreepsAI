@@ -5,6 +5,8 @@ const roomMemory = require('util.allocRoomMemory');
 const calculateThreat = require('util.calculateThreat');
 const signController = require('ai.signController');
 const autoMiner = require('role.autoMiner');
+const roleHauler = require('role.hauler');
+const roleTractor = require('role.tractor')
 
 var clearDeadInterval = 50; // How often dead creeps should be purged from memory
 
@@ -40,6 +42,12 @@ module.exports.loop = function () {
             }
             else if (creep.memory.role == 'autoMiner'){
                 autoMiner.run(creep);
+            }
+            else if (creep.memory.role == 'hauler'){
+                roleHauler.run(creep);
+            }
+            else if (creep.memory.role == 'tractor'){
+                roleTractor.run(creep);
             }
         }
     }
