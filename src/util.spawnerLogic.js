@@ -31,10 +31,12 @@ function spawnerLogic(spawn){
             spawnBUBmkII(spawn);
             return;
         }
-
-        if(numAutoMinerCreeps < spawn.room.find(FIND_SOURCES).length){
-            spawnAutomatedMiner(spawn);
-            return;
+        
+        if((numBUBCreeps + numBUBmkiiCreeps) >= 3){
+            if(numAutoMinerCreeps < spawn.room.find(FIND_SOURCES).length){
+                spawnAutomatedMiner(spawn);
+                return;
+            }
         }
 
         //I probably need a better calculation than this... 
