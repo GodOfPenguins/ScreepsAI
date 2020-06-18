@@ -17,12 +17,29 @@ function spawnerLogic(spawn){
 
     if(!isSpawning){
         getCreepsInRoom(spawn);
-        
+
         (numBUBmkiiCreeps + numBUBCreeps) < 3 ? spawnBUB(spawn):null
-        tractorNeeded? numTractorCreeps == 0? spawnTractor(spawn): null: null;
-        
+        if(tractorNeeded && numTractorCreeps == 0 && spawn.room.energyAvailable >= 300){
+            spawnTractor(spawn);
+        }        
         if (numAlertFighters < 2){
-            spawnAlertFighter
+            spawnAlertFighter(spawn)
+        }
+
+        if(numAlertFighters > 2){
+            let flags = Game.flags;
+            let supportNeeded;
+            for (let f in flags){
+                let numFighters = flags[f].room.find(FIND_MY_CREEPS).filter(c => c.role == 'alertFighter').length;
+                if (numFighters < 2){
+                    supportNeeded = flags[f].room;
+                    break
+                }
+            }
+            if(supportNeeded){
+                spawnAlertFighter(spawn, supportNeeded.id);
+            }
+
         }
 
         let threat = spawn.room.memory.threatLevel;
@@ -101,14 +118,15 @@ function spawnTractor(spawn){
     let newName = "yuvwI'_" + Game.time;
     let engAv = spawn.room.energyAvailable;
     let body = [];
-    while (engAv >= 100){
+    while (engAv >= 50){
         body.push(MOVE);
+        engAv -= 50;
     }
     let memoryOptions = {memory: {role:'tractor', target: null, destination:null, buildType:'tractor'}};
     spawn.spawnCreep(body, newName, memoryOptions);
 }
 
-function spawnAlertFighter(spawn){
+function spawnAlertFighter(spawn, stationAt = null){
     let newName = 'SuvwI\'_' + Game.time;
     let body = [];
     if (spawn.room.energyCapacityAvailable <= 300){
@@ -119,7 +137,8 @@ function spawnAlertFighter(spawn){
         body = alertFighterII;
         type = 'alertFighterII'
     }
-    let memoryOptions = {memory: {role:'alertFighter', buildType: type}}
+    let memoryOptions = {memory: {role:'alertFighter', buildType: type, station:stationAt}}
+    spawn.spawnCreep(body, newName, memoryOptions);
 }
 
 function scrambleAlertFighters(spawn){

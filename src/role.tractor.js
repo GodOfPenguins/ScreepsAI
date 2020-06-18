@@ -1,15 +1,20 @@
 var roleTractor = {
     /** @param {Creep} creep **/
     run: function(creep){
-            target = creep.memory.target;
-            destination = creep.memory.target;
-            if(target.memory.needTractor == false || target == null){
-                creep.memory.target = getTarget();
-                target = Game.getObjectById(creep.memory.target);
-                creep.memory.destination = target.memory.target;
-                destination = Game.getObjectById(creep.memory.destination);
+            let target = creep.memory.target;
+            let destination = creep.memory.destination;
+            if(target == null){
+                creep.memory.target = getTarget(creep);
+                target = creep.memory.target;
+                creep.memory.destination = target.memory.targetID;
+                destination = creep.memory.destination;
             }
-            if(creep.pos.isNearTo(target)){
+            target ? target = Game.getObjectById(target):null;
+            if(target != null && target.memory.needTractor == false){
+                creep.memory.target = null;
+            }
+            if(target && creep.pos.isNearTo(target)){
+                destination = Game.getObjectById(destination);
                 creep.move(destination);
                 creep.pull(target);
                 target.move(creep);
@@ -17,22 +22,18 @@ var roleTractor = {
             else{
                 creep.move(target);
             }
-            if(target.pos.isNearTo(destination)){
+            if(target && target.pos.isNearTo(destination)){
                 target.memory.needTractor = false;
                 creep.memory.target = null;
                 creep.memory.destination = null;
             }
-            if(!target){
-                
-            }
-
     }
 }
 
 module.exports = roleTractor;
 
 function getTarget(creep){
-    needTractor = creep.room.find(FIND_MY_CREEPS).filter(c=>c.memory.needTractor);
-    target = creep.pos.findClosestByRange(needTractor).id;
+    let needTractor = creep.room.find(FIND_MY_CREEPS).filter(c=>c.memory.needTractor);
+    let target = creep.pos.findClosestByRange(needTractor).id;
     return target;
 }
