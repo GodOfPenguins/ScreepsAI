@@ -8,6 +8,7 @@ var numBUBCreeps;
 var numBUBmkiiCreeps;
 var numAutoMinerCreeps;
 var numTractorCreeps;
+var numHaulerCreeps;
 var tractorNeeded;
 var numAlertFighters;
     
@@ -36,7 +37,13 @@ function spawnerLogic(spawn){
             return;
         }
 
-        
+        //I probably need a better calculation than this... 
+        let minerWork = (numAutoMinerCreeps * 2) * 150;
+        let haulerCap = numHaulerCreeps * 50;
+        if(haulerCap < minerWork){
+            spawnHauler(spawn);
+            return;
+        }
 
         if (numAlertFighters < 2){
             spawnAlertFighter
@@ -87,7 +94,7 @@ function spawnBUBmkII(spawn){
 }
 
 function spawnAutomatedMiner(spawn){
-    let newName = "tlhIlwI\'_" + Game.time;
+    let newName = "tlhIlwI'_" + Game.time;
     engAv = spawn.room.energyAvailable;
     body = [];
     while (engAv >= 100){
@@ -98,7 +105,7 @@ function spawnAutomatedMiner(spawn){
 }
 
 function spawnTractor(spawn){
-    let newName = "yuvwI\'_" + Game.time;
+    let newName = "yuvwI'_" + Game.time;
     let engAv = spawn.room.energyAvailable;
     let body = [];
     while (engAv >= 100){
@@ -122,34 +129,35 @@ function spawnAlertFighter(spawn){
     memoryOptions = {memory: {role:'alertFighter', buildType: type}}
 }
 
-function getEnergyNeed(spawn){
-    // Energy collection need
-    let hNeed = (spawn.room.energyAvailable + Memory.heCommit - spawn.room.energyCapacityAvailable);
-    //Build need
-    let bNeed = 0;
-    let sites = spawn.room.find(FIND_MY_CONSTRUCTION_SITES);
-    for(let c in sites){bNeed += sites[c].progressTotal - sites[c].progress};
-    if(isNaN(bNeed)){bNeed = 0}
-    // Repair need
-    let rNeed = 0;
-    let structs = spawn.room.find(FIND_MY_STRUCTURES, {
-        filter: (structure) => {
-            return (structure.structureType != STRUCTURE_CONTROLLER)
-    }});
-    for(let s in structs){rNeed += structs[s].hitsMax - structs[s].hits};
-    // Work cap of BUBs
-    let bubEngCap = (numBUBCreeps + (numBUBmkiiCreeps * 3) ) * 50;
+function scrambleAlertFighters(spawn){
+    let newName = "'avwI'_" + Game.time;
+    let engAv = spawn.room.energyAvailable;
+    let body = [];
+    if (engAv > 200){
 
-    return (hNeed + bNeed + rNeed) - bubEngCap;
+    }
 }
 
-function scrambleAlertFighters(spawn){
-    let newName = "'avwI'_";
+function spawnHauler(spawn){
+    let newName = "qengwI'_" + Game.time;
     let engAv = spawn.room.energyAvailable;
-    let body = []
-    if (engAv > 200){
-        
+    let body = [];
+    while(engAV > 100){
+        body.push(WORK);
+        body.push(MOVE);
+        engAv -= 100;
     }
+    let memoryOptions = {memory: {buildType:'hauler'}};
+    spawn.spawnCreep(body, newName, memoryOptions);    
+}
+
+function getSourcesEnergyCap(spawn){
+    let sources = creep.room.find(FIND_SOURCES);
+    let cap = 0;
+    for (let s in sources){
+        cap += sources[s].energyCapacity;
+    }
+    return cap;
 }
 
 function getCreepsInRoom(spawn){
@@ -169,15 +177,42 @@ function getCreepsInRoom(spawn){
                     numBUBmkiiCreeps++;
                     break;
                 case 'autoMiner':
-                    numAutoMinerCreeps++;
+                    let parts = creeps[c].getActiveBodyParts(WORK)
+                    numAutoMinerCreeps += parts;
                     if(creeps.memory.needTractor = true){
                         tractorNeeded = true;
                     }
+                    break;
+                case 'hauler':
+                    let parts = creeps[c].getActiveBodyParts(CARRY);
+                    numHaulerCreeps += parts;
                 case 'alertFighter':
                     numAlertFighters++;
+                    break;
                 default:
                     console.log(creeps[c] + " is of an unknown Buildtype");
             }
         }
     }
+}
+
+function getEnergyNeed(spawn){
+    // Energy collection need
+    let hNeed = (spawn.room.energyAvailable + Memory.heCommit - spawn.room.energyCapacityAvailable);
+    //Build need
+    let bNeed = 0;
+    let sites = spawn.room.find(FIND_MY_CONSTRUCTION_SITES);
+    for(let c in sites){bNeed += sites[c].progressTotal - sites[c].progress};
+    if(isNaN(bNeed)){bNeed = 0}
+    // Repair need
+    let rNeed = 0;
+    let structs = spawn.room.find(FIND_MY_STRUCTURES, {
+        filter: (structure) => {
+            return (structure.structureType != STRUCTURE_CONTROLLER)
+    }});
+    for(let s in structs){rNeed += structs[s].hitsMax - structs[s].hits};
+    // Work cap of BUBs
+    let bubEngCap = (numBUBCreeps + (numBUBmkiiCreeps * 3) ) * 50;
+
+    return (hNeed + bNeed + rNeed) - bubEngCap;
 }
