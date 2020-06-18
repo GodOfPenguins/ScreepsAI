@@ -2,12 +2,15 @@ var roleHauler = {
     /** @param {Creep} creep **/
     run: function(creep){
         let target;
-        if(creep.store[RESOURCE_ENERGY] > 0){
+        if(creep.store.getUsedCapacity() > 0){
             target = getTargetByPriority(creep);
+            resource = _.findKey(creep.store);
         }
         if (target){
-            target.structureType = STRUCTURE_SPAWN || target.structureType == STRUCTURE_EXTENSION ? creep.transfer(target, RESOURCE_ENERGY):creep.moveTo(target);
-            target.structureType = STRUCTURE_STORAGE || target.structureType == STRUCTURE_CONTAINER ? creep.transfer(target, _.findKey(creep.store)[0]):creep.moveTo(target);
+            if (resource == 'energy'){
+                target.structureType = STRUCTURE_SPAWN || target.structureType == STRUCTURE_EXTENSION ? creep.transfer(target, RESOURCE_ENERGY):creep.moveTo(target);
+            }
+                // target.structureType = STRUCTURE_STORAGE || target.structureType == STRUCTURE_CONTAINER ? creep.transfer(target, _.findKey(creep.store)):creep.moveTo(target);
         }
     }        
 }

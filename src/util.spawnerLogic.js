@@ -16,10 +16,15 @@ function spawnerLogic(spawn){
     let isSpawning = spawn.spawning == false;  
 
     if(!isSpawning){
-        getCreepsInRoom(spawn)
-
+        getCreepsInRoom(spawn);
+        
+        (numBUBmkiiCreeps + numBUBCreeps) < 3 ? spawnBUB(spawn):null
         tractorNeeded? numTractorCreeps == 0? spawnTractor(spawn): null: null;
         
+        if (numAlertFighters < 2){
+            spawnAlertFighter
+        }
+
         let threat = spawn.room.memory.threatLevel;
         //General population level maintinance, based on energy
 
@@ -32,7 +37,7 @@ function spawnerLogic(spawn){
             return;
         }
         
-        if((numBUBCreeps + numBUBmkiiCreeps) >= 3){
+        if((numBUBCreeps + numBUBmkiiCreeps) >= 3 && spawn.room.energyAvailable > 300){
             if(numAutoMinerCreeps < spawn.room.find(FIND_SOURCES).length){
                 spawnAutomatedMiner(spawn);
                 return;
@@ -47,10 +52,6 @@ function spawnerLogic(spawn){
             return;
         }
 
-        if (numAlertFighters < 2){
-            spawnAlertFighter
-        }
-
         // Address shortfalls
         
         let adjNeed = getEnergyNeed(spawn);
@@ -62,19 +63,8 @@ function spawnerLogic(spawn){
         else if (adjNeed > 150 && spawn.room.energyCapcityAvailable >=300){
             spawnBUB(spawn)    
             return;        
-        }
-        else if ((numBUBCreeps + numBUBmkiiCreeps) == 0 && spawn.room.energyAvailable >= 550){
-            spawnBUBmkII(spawn);
-            return;
-        }
-            else if ((numBUBCreeps + numBUBmkiiCreeps) == 0 && spawn.room.energyAvailable >= 200){
-            spawnBUB(spawn);
-            return;
-        }
-
-        
-    }     
-    
+        }        
+    }         
 }
 
 module.exports = {
