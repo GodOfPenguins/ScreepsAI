@@ -35,7 +35,7 @@ module.exports.loop = function () {
             if (creep.memory.signController == true){
                 signController.run(creep);
             }
-            else if (creep.memory.buildType == ('BUB' || 'BUBmkII')){
+            else if (creep.memory.buildType == 'BUB' || creep.memory.buildType == 'BUBmkII'){
                 bubBasicAI.run(creep);            
             }
             else if (creep.memory.role == 'autoMiner'){
