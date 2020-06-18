@@ -97,8 +97,8 @@ function spawnBUBmkII(spawn){
 
 function spawnAutomatedMiner(spawn){
     let newName = "tlhIlwI'_" + Game.time;
-    engAv = spawn.room.energyAvailable;
-    body = [];
+    let engAv = spawn.room.energyAvailable;
+    let body = [];
     while (engAv >= 100){
         body.push(WORK);
         engAv -= 100;
