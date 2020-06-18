@@ -19,6 +19,7 @@ const roleRepairer = require("./role.repairer");
 var upgraders;
 var builders;
 var harvesters;
+var repairers;
 
 var bubBasicAI = {
 
@@ -209,10 +210,12 @@ function getRepairPriority(creep){
 }
 
 function getBuBRoles(){ // This is a helper function to get how many BUBs are working in each role.
-    harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-    upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
-    builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-    console.log("BUB role allocation: " + harvesters.length + ", " + upgraders.length+ ", " + builders.length)
+    let roomCreeps = creep.room.find(FIND_MY_CREEPS);
+    harvesters = _.filter(roomCreeps, (creep) => creep.memory.role == 'harvester');
+    upgraders = _.filter(roomCreeps, (creep) => creep.memory.role == 'upgrader');
+    builders = _.filter(roomCreeps, (creep) => creep.memory.role == 'builder');
+    repairers = _.filter(roomCreeps, (creep) => creep.memory.role == 'repairer');
+    console.log("BUB role allocation: " + harvesters.length + ", " + upgraders.length+ ", " + builders.length, + ", " + repairers.length)
 }
 
 function getRepairVals(creep){

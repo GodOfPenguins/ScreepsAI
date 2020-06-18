@@ -3,6 +3,8 @@ const manageDead = require('util.clearDeadCreeps');
 const spawnerManagement = require('util.spawnerLogic');
 const roomMemory = require('util.allocRoomMemory');
 const calculateThreat = require('util.calculateThreat');
+const signController = require('ai.signController');
+const autoMiner = require('role.autoMiner');
 
 var clearDeadInterval = 50; // How often dead creeps should be purged from memory
 
@@ -30,10 +32,15 @@ module.exports.loop = function () {
     for (let name in Game.creeps){
         let creep = Game.creeps[name];
         if (creep.spawning == false){
-            if (creep.memory.buildType == ('BUB' || 'BUBmkII')){
+            if (creep.memory.signController == true){
+                signController.run(creep);
+            }
+            else if (creep.memory.buildType == ('BUB' || 'BUBmkII')){
                 bubBasicAI.run(creep);            
+            }
+            else if (creep.memory.role == 'autoMiner'){
+                autoMiner.run(creep);
             }
         }
     }
-    
 } 
