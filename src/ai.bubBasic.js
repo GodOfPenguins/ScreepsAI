@@ -219,7 +219,7 @@ function getBuBRoles(){ // This is a helper function to get how many BUBs are wo
 }
 
 function getRepairVals(creep){
-    let structures = creep.room.find(FIND_STRUCTURES);
+    let structures = creep.room.find(FIND_STRUCTURES).filter(s => s.structureType != STRUCTURE_CONTROLLER);
     let hits = 0;
     let maxHits = 0;
     for (let s in structures){
