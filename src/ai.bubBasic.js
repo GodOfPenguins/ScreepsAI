@@ -201,7 +201,7 @@ function getBuildPriority(creep){
 }
 
 function getRepairPriority(creep){
-    repairVals = getRepairVals(creep);
+    let repairVals = getRepairVals(creep);
     let rpVal = repairVals[0] - (creep.room.rpCommit / 100) / repairVals[1];
     if (isNaN(rpVal)){
         return 0;
