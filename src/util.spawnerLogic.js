@@ -103,7 +103,7 @@ function spawnAutomatedMiner(spawn){
         body.push(WORK);
         engAv -= 100;
     }
-    memoryOptions = {memory: {role:'autoMiner', needTractor: true, buildType:'autoMiner'}};
+    let memoryOptions = {memory: {role:'autoMiner', needTractor: true, buildType:'autoMiner'}};
     spawn.spawnCreep(body, newName, memoryOptions);    
 }
 
@@ -114,7 +114,7 @@ function spawnTractor(spawn){
     while (engAv >= 100){
         body.push(MOVE);
     }
-    memoryOptions = {memory: {role:'tractor', target: null, destination:null, buildType:'tractor'}};
+    let memoryOptions = {memory: {role:'tractor', target: null, destination:null, buildType:'tractor'}};
     spawn.spawnCreep(body, newName, memoryOptions);
 }
 
@@ -129,7 +129,7 @@ function spawnAlertFighter(spawn){
         body = alertFighterII;
         type = 'alertFighterII'
     }
-    memoryOptions = {memory: {role:'alertFighter', buildType: type}}
+    let memoryOptions = {memory: {role:'alertFighter', buildType: type}}
 }
 
 function scrambleAlertFighters(spawn){
