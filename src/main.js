@@ -17,7 +17,6 @@ var clearDeadInterval = 50; // How often dead creeps should be purged from memor
 
 module.exports.loop = function () {
     console.log(Game.time);
-
     for (let r in Game.rooms){
         let room = Game.rooms[r];
         if(room.memory.updateRoomMemorySettings != false){roomMemory.allocRoomMemory(room)}

@@ -2,7 +2,7 @@ function clearDeadCreeps(){
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
             let creep = Memory.creeps[name];
-            if (creep.role){
+            /*if (creep.role){
                 let engVal = creep.buildType == 'BUB' ? 50:150
                 switch (creep.role){
                     case 'harvester':
@@ -22,7 +22,7 @@ function clearDeadCreeps(){
             }
             else if (creep.harvesting == true){
                 Memory.sourceAlloc[creep.targetSourceIndex]--;
-            }
+            }*/
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
             /*
