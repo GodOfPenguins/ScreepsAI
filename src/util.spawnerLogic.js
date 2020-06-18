@@ -36,9 +36,12 @@ function spawnerLogic(spawn){
             return;
         }
 
+        
+
         if (numAlertFighters < 2){
-            
+            spawnAlertFighter
         }
+
         // Address shortfalls
         
         let adjNeed = getEnergyNeed(spawn);
@@ -101,7 +104,7 @@ function spawnTractor(spawn){
     while (engAv >= 100){
         body.push(MOVE);
     }
-    memoryOptions = {memory: {role:'tractor', target: null, buildType:'tractor'}};
+    memoryOptions = {memory: {role:'tractor', target: null, destination:null, buildType:'tractor'}};
     spawn.spawnCreep(body, newName, memoryOptions);
 }
 
@@ -138,6 +141,15 @@ function getEnergyNeed(spawn){
     let bubEngCap = (numBUBCreeps + (numBUBmkiiCreeps * 3) ) * 50;
 
     return (hNeed + bNeed + rNeed) - bubEngCap;
+}
+
+function scrambleAlertFighters(spawn){
+    let newName = "'avwI'_";
+    let engAv = spawn.room.energyAvailable;
+    let body = []
+    if (engAv > 200){
+        
+    }
 }
 
 function getCreepsInRoom(spawn){

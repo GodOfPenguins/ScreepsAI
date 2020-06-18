@@ -17,6 +17,14 @@ var roleTractor = {
             else{
                 creep.move(target);
             }
+            if(target.pos.isNearTo(destination)){
+                target.memory.needTractor = false;
+                creep.memory.target = null;
+                creep.memory.destination = null;
+            }
+            if(!target){
+                
+            }
 
     }
 }
