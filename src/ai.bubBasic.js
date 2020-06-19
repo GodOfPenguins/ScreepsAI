@@ -9,16 +9,6 @@ const sourceAllocator = require('util.sourceAllocator');
 const globalVariables = require('util.globalVariables');
 const roleRepairer = require("role.repairer");
 
-// Once the task is completed, the BUB should report the task complete and remove the committed energy from the task cue
-//Memory.heCommit; // Just making a note of them so I can find them later.
-//Memory.beCommit;
-//Memory.rpCommit;
-
-var upgraders;
-var builders;
-var harvesters;
-var repairers;
-
 var bubBasicAI = {
 
     /** @param {Creep} creep **/
