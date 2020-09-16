@@ -1,5 +1,8 @@
 const { xor } = require("lodash");
 
+//targetID -- the source to mine
+//needTractor -- flag to call for a tractor
+
 var automatedMining = {
     /** @param {Creep} creep **/
     run: function(creep){
@@ -19,7 +22,7 @@ var automatedMining = {
 
 module.exports = automatedMining;
 
-function findTarget(creep){
+function findTarget(creep){ // Need to rewrite this so that is calculates how much energy is being harvested over the source's refresh-rate and find the best-fit source
     let sources = creep.room.find(FIND_SOURCES);
     let miners = creep.room.find(FIND_MY_CREEPS).filter(c => c.role == 'autoMiner');
     let targets = [];
@@ -36,17 +39,17 @@ function findTarget(creep){
 
 function mine(target, creep){
     let result = creep.harvest(target)
+    let creepMem = creep.memory;
     switch(result){
         case ERR_NOT_IN_RANGE:
-            creepMem.needTractor = true;
+            creepMem.needTractor ? null : creepMem.needTractor = true;
             break;
         case ERR_NOT_ENOUGH_ENERGY:
             break;
         case OK:
-            if(creepMem.needTractor = true){
-                creepMem.needTractor = false;
-            }
+            break;
         default:
+            console.log(result);
             console.log(creep + " qaS wanI\' taQ");
     }
 }

@@ -1,3 +1,9 @@
+const basicUtiltyBuild = [WORK, CARRY, MOVE]; // 200 points, "Bub" :D
+const basicUtiltyBuildmkII = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]; // 550 points
+const alertFighterII = [MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK]; // 390 points
+const alertFighter = [MOVE, MOVE, ATTACK, ATTACK]; // 280 points
+const birdOfPreyI = [TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK];
+
 function spawnBUB(spawn, role){
     let engAv = spawn.room.energyAvailable;
     let newName;

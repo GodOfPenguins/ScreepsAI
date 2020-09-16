@@ -2,25 +2,25 @@ var roleTractor = {
     /** @param {Creep} creep **/
     run: function(creep){
             let target = creep.memory.target;
+            if (target){target = Game.getObjectById(target)}
             let destination = creep.memory.destination;
             if(target == null){
-                creep.memory.target = getTarget(creep);
-                target = creep.memory.target;
-                creep.memory.destination = target.memory.targetID;
-                destination = creep.memory.destination;
+                target = getTarget(creep);
+                if (target){
+                    creep.memory.target = target.id;
+                    creep.memory.destination = target.memory.targetID;
+                }
             }
-            target ? target = Game.getObjectById(target):null;
-            if(target != null && target.memory.needTractor == false){
+            if(target && !destination){creep.memory.destination = target.memory.targetID}
+            if(target && target.memory.needTractor == false){
                 creep.memory.target = null;
             }
             if(target && creep.pos.isNearTo(target)){
                 destination = Game.getObjectById(destination);
-                creep.move(destination);
-                creep.pull(target);
-                target.move(creep);
+                creep.pos.isNearTo(destination) ? dropIt(creep, target) : pullIt(creep, target, destination);
             }
             else{
-                creep.move(target);
+                creep.moveTo(target);
             }
             if(target && target.pos.isNearTo(destination)){
                 target.memory.needTractor = false;
@@ -34,6 +34,24 @@ module.exports = roleTractor;
 
 function getTarget(creep){
     let needTractor = creep.room.find(FIND_MY_CREEPS).filter(c=>c.memory.needTractor);
-    let target = creep.pos.findClosestByRange(needTractor).id;
+    let target;
+    if (needTractor.length){
+        target = creep.pos.findClosestByRange(needTractor);
+    }
     return target;
+}
+
+function pullIt(creep, target, destination){
+    creep.moveTo(destination);
+    creep.pull(target);
+    target.move(creep);
+}
+
+function dropIt(creep, target){
+    creep.moveTo(target.pos);
+    creep.pull(target);
+    target.move(creep);
+    target.memory.needTractor = false;
+    creep.memory.target = null;
+    creep.memory.destination = null;   
 }

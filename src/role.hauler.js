@@ -1,17 +1,13 @@
 var roleHauler = {
     /** @param {Creep} creep **/
     run: function(creep){
-        let target;
-        if(creep.store.getUsedCapacity() > 0){
-            target = getTargetByPriority(creep);
-            resource = _.findKey(creep.store);
-        }
-        if (target){
-            if (resource == 'energy'){
-                target.structureType = STRUCTURE_SPAWN || target.structureType == STRUCTURE_EXTENSION ? creep.transfer(target, RESOURCE_ENERGY):creep.moveTo(target);
-            }
-                // target.structureType = STRUCTURE_STORAGE || target.structureType == STRUCTURE_CONTAINER ? creep.transfer(target, _.findKey(creep.store)):creep.moveTo(target);
-        }
+        let targetResource = Game.getObjectById(creep.memory.targetResource)
+        let destination = Game.getObjectById(creep.memory.destination)
+        // If has capacity, then it needs to go get some resources. Otherwise, it needs to take the resources to appropriate storage
+        // It would be nice to have some decision making about the efficacy of dropping off resources vs collecting more if partially full.
+        
+        
+
     }        
 }
 
@@ -28,4 +24,15 @@ function getTargetByPriority(creep){
         target? target = targets[0]:null;
     }
     return target;
+}
+
+function findPriorityResource(creep){
+    let resources = creep.room.find(FIND_DROPPED_RESOURCES);
+    let haulers = _.filter(creep.room.find(FIND_MY_CREEPS), function(c) {if(c.memory.targetResource){return c.memory.targetsource}});
+    let unclaimed = resources.filter(r => !haulers.includes(r));
+
+}
+
+function getFullness(){
+    
 }

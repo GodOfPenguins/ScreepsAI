@@ -6,7 +6,7 @@ const calculateThreat = require('util.calculateThreat');
 const signController = require('ai.signController');
 const autoMiner = require('role.autoMiner');
 const roleHauler = require('role.hauler');
-const roleTractor = require('role.tractor')
+const roleTractor = require('role.tractor');
 
 var clearDeadInterval = 50; // How often dead creeps should be purged from memory
 
@@ -20,7 +20,7 @@ module.exports.loop = function () {
     for (let r in Game.rooms){
         let room = Game.rooms[r];
         if(room.memory.updateRoomMemorySettings != false){roomMemory.allocRoomMemory(room)}
-        if(room.find(FIND_HOSTILE_CREEPS).length > 0){ room.memory.threatLevel = calculateThreat.calculateRoomThreat(room)}
+        //if(room.find(FIND_HOSTILE_CREEPS).length > 0){ room.memory.threatLevel = calculateThreat.calculateRoomThreat(room)}
     }
     if((Game.time % clearDeadInterval) === 0){manageDead.clearDeadCreeps()} 
 

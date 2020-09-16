@@ -1,3 +1,7 @@
+const roleUpgrader = require("./role.upgrader");
+
+var roleUpgrader = require('role.upgrader');
+
 var roleBuilder = {
 
     /** @param {Creep} creep **/
@@ -9,11 +13,10 @@ var roleBuilder = {
             }
         }   
         else{
-            creep.memory.role = 'upgrader';
-            Memory.beCommit -= creep.store.getCapacity[RESOURCE_ENERGY];
+            roleUpgrader.run(creep)
         }    
         if(creep.store[RESOURCE_ENERGY] == 0) {
-            creep.memory.role = null;
+            creep.memory.harvesting = true;
         }
     }
 };

@@ -5,10 +5,11 @@ var roleRepairer = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-        target = creep.memory.target;
+        let target = creep.memory.target;
 
         if (target == null){
             target = getTargetStructure(creep);
+            if(target == null){ roleUpgrader.run(creep); }
         }
         if(target != null) {
             if(creep.repair(target) == ERR_NOT_IN_RANGE) {

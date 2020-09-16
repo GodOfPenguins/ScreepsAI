@@ -7,7 +7,7 @@ var alertFighter ={
             target = creep.pos.findClosestByPath(enemies);
         }
         if(target){
-            if(creep.attack(target) == ERR_NOT_IN_RANGE){
+            if(creep.attack(target) === ERR_NOT_IN_RANGE){
                 creep.moveTo(target);
             }
         }
@@ -22,4 +22,4 @@ var alertFighter ={
     }
 }
 
-module.exports = alerFighter;
+module.exports = alertFighter;

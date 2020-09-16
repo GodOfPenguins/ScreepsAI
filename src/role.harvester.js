@@ -17,11 +17,10 @@ var roleHarvester = {
             }
         }
         else{
-            Memory.heCommit -= creep.store.getCapacity[RESOURCE_ENERGY];
             roleUpgrader.run(creep);
         }
         if(creep.store[RESOURCE_ENERGY] == 0) {
-            creep.memory.role = null;
+            creep.memory.harvesting = true;
         }
     }
 };

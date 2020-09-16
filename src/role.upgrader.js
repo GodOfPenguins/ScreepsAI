@@ -6,7 +6,7 @@ var roleUpgrader = {
                 creep.moveTo(creep.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
         }
         if(creep.store[RESOURCE_ENERGY] == 0) {
-            creep.memory.role = null;
+            creep.memory.harvesting = true;
         }
     }
 };

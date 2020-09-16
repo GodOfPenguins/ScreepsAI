@@ -1,12 +1,6 @@
 const { stubObject } = require("lodash");
 const spawnType = require('util.spawnTypes');
 
-const basicUtiltyBuild = [WORK, CARRY, MOVE]; // 200 points, "Bub" :D
-const basicUtiltyBuildmkII = [WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]; // 550 points
-const alertFighterII = [MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK]; // 390 points
-const alertFighter = [MOVE, MOVE, ATTACK, ATTACK]; // 280 points
-const birdOfPreyI = [TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK];
-
 var numHarvesters;
 var numBuilders;
 var numRepairers;
@@ -20,6 +14,7 @@ function spawnerLogic(spawn){
     let isSpawning = spawn.spawning == false;  
 
     if(!isSpawning){ // Block for immidiate needs
+        let needTractor = spawn.room.find(FIND_MY_CREEPS).filter(c => c.memory.needTractor)
         getCreepsInRoom(spawn);
 
         if(numHarvesters == 0){spawnType.spawnBUB(spawn, 'harvester')}
@@ -32,11 +27,24 @@ function spawnerLogic(spawn){
     
     isSpawning = spawn.spawning == false;  
     if(!isSpawning){
-        priority = getPriority(spawn);
-        rcl = spawn.room.controller.level;
+        let priority = getPriority(spawn);
+        let rcl = spawn.room.controller.level;
 
         if(rcl < 3){
             spawnType.spawnBUB(spawn, priority);
+        }
+
+        if(rcl >= 3){
+            switch(priority){
+                case 'harvester':
+                    spawnType.spawnAutominer(spawn);
+                case 'hauler':
+                    spawnType.spawnHauler(spawn);
+                case 'builder':
+                    spawnType.spawnBUB(spawn, priority);
+                case 'upgrader':
+                    spawnType.spawnBUB(spawn, priority);
+            }
         }
 
     }
@@ -59,8 +67,8 @@ function scrambleAlertFighters(spawn){
 
 function getPriority(spawn){
     let workNeeded = getWorkNeeded(spawn);
-    val = 0;
-    priority = 0;
+    let val = 0;
+    let priority = 0;
     for(i = 0; i < workNeeded.length; i++){
         if (workNeeded[i] > val){
             val = workNeeded[i];
@@ -114,7 +122,7 @@ function getRepairNeed(spawn){
         }
     }
 
-    val = (numRepairers * 1000)  / (numMax - numTot);
+    let val = (numRepairers * 1000)  / (numMax - numTot);
 
     return val; 
 }
@@ -130,7 +138,7 @@ function getUpgradeNeed(spawn){
     //let controllerUpgradeLevels = [0, 200, 45000, 135000, 405000, 1215000, 3645000, 10935000, 0];
     //let controllerMaxTicksToDown = [0, 20000, 10000, 20000, 40000, 80000, 120000, 150000, 200000];
     let ctrlLevel = spawn.room.controller.level;
-    val = 1 - ((numUpgraders * 1.5) / (ctrlLevel * 1.5))
+    let val = 1 - ((numUpgraders * 1.5) / (ctrlLevel * 1.5))
 }
 
 function getCreepsInRoom(spawn){
@@ -142,7 +150,7 @@ function getCreepsInRoom(spawn){
     numAlertFighters = 0;
     numAutominers = 0;
 
-    creeps = spawn.room.find(FIND_MY_CREEPS)
+    let creeps = spawn.room.find(FIND_MY_CREEPS)
     for (let c in creeps){
         incrementCreepTypeValues(creeps[c]);
     }
