@@ -10,6 +10,10 @@ const CREEP_TYPE_MINER = 2;
 const CREEP_TYPE_HAULER = 3;
 const CREEP_TYPE_FIGHTER = 4;
 
+const COMMIT_UPGRADE = 0;
+const COMMIT_SPAWN = 0;
+const COMMIT_BUILD = 0
+
 const MISSION_MINING = 0;
 const MISSION_UPGRADING = 1;
 const MISSION_SPAWNING = 2;
@@ -17,7 +21,7 @@ const MISSION_REPAIRING = 3
 const MISSION_TRACTORING = 4;
 const MISSION_GATHERING = 5;
 const MISSION_WAITING = 6;
-const MISSION_SPAWN = 7;
+const MISSION_BUILDING = 7;
 
 module.exports.loop = function () {
 
@@ -27,38 +31,43 @@ module.exports.loop = function () {
     for (let name in Game.rooms){
         let room = Game.rooms[name];
         // Manage Room Memory
-        if (!room.memory.creepRoledist){
-            room.memory.creepRoleDist == [0, 0, 0, 0, 0];
-            room.memory.optimalCreeps = [3, 1, 2, 2];
+        if(!room.memory.engCommit){
+            room.memory.engCommit = [];
         }
-        // Get creep counts
-        if (time % creepRecalculationInterval == 0){
-            room.memory.creepRoleDist = [0, 0, 0, 0, 0];
 
-            let roomCreeps = room.find(FIND_MY_CREEPS);
-            for (let i in roomCreeps){
-                let creep = roomCreeps[i]
-                switch (creep.memory.role) {
-                    case CREEP_TYPE_BUB:
-                        room.memory.creepRoleDist[CREEP_TYPE_BUB]++                        
-                        break;
-                    default:
-                        break;
+
+        // Allocate creeps in the room
+        
+        let spawns = room.find(FIND_MY_SPAWNS);
+        let creeps = room.find(FIND_MY_CREEPS);
+        let constructionSites = room.find(FIND_MY_CONSTRUCTION_SITES);
+        
+        // Get the amount of energy in spawns
+
+        let engNeed = room.energyCapacityAvailable - room.energyAvailable;
+        let constructNeed = 0;
+
+        for (site in constructionSites){
+            constructNeed += (site.progressTotal - site.progress);
+        }
+
+        if (creeps.length < 5){
+            for (spawn in spawns){
+                if (!spawn.spawning){
+                    spawn.spawnCreep([MOVE, WORK, CARRY], "BUB" + time, {memory: {role: CREEP_TYPE_BUB, mission: MISSION_WAITING}})
+                    break;
                 }
             }
         }
-    
-        // Calculate the optimal creep distribution for the room
-        if (time % optimalCreepCalculationInterval == 0){
-            room.memory.optimalCreeps = [3, 1, 2, 2]
+
+        creeps.sort(function(a, b) {return b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY)})
+
+        for (let creep in creeps){
+            
         }
 
-        // Audit the room energy allocation to account for any dead creeps
-        if (time % roomAuditInterval == 0){
-            room.memory.energyAllocation = [];
-        }
         
-        room.memory.spawnNeed = 0;
+        
     }
 
     // Manage Spawns
@@ -68,12 +77,11 @@ module.exports.loop = function () {
         let roomMem = spawn.room.memory;
         
         if (roomMem.creepRoleDist[CREEP_TYPE_BUB] < roomMem.optimalCreeps[CREEP_TYPE_BUB]){
-            let returnValue = spawn.spawnCreep([WORK, MOVE, CARRY], "BUB" + time, {memory: {role: CREEP_TYPE_BUB, mission: MISSION_WAITING}});
+            let returnValue = spawn.spawnCreep([WORK, MOVE, CARRY], "BUB" + time, {memory: {role: CREEP_TYPE_BUB, mission: MISSION_WAITING, target: null}});
             
             switch (returnValue) {
                 case OK:
                     spawn.room.memory.creepRoleDist[CREEP_TYPE_BUB]++;
-                    console.log("Meow?");
                     break;
                 case ERR_BUSY:
                     break;
