@@ -1,7 +1,5 @@
-var deadCreepCullingInterval = 51;
-var creepRecalculationInterval = 24;
-var optimalCreepCalculationInterval = 100;
 var roomAuditInterval = 1500;
+var clearDeadCreepInterval = 150;
 // var roomNeedCalculationInterval = 1;
 
 const CREEP_TYPE_BUB = 0;
@@ -25,6 +23,10 @@ const MISSION_BUILDING = 7;
 
 module.exports.loop = function () {
 
+    if (Game.time % clearDeadCreepInterval == 0){
+        ClearDeadCreeps();
+    }
+    
     var time = Game.time;
 
     // Manage Rooms
@@ -32,11 +34,8 @@ module.exports.loop = function () {
         let room = Game.rooms[name];
         // Manage Room Memory
         if(!room.memory.engCommit){
-            room.memory.engCommit = [];
+            room.memory.engCommit = [0, 0, 0];
         }
-
-
-        // Allocate creeps in the room
         
         let spawns = room.find(FIND_MY_SPAWNS);
         let creeps = room.find(FIND_MY_CREEPS);
@@ -69,95 +68,13 @@ module.exports.loop = function () {
         
         
     }
+}
 
-    // Manage Spawns
-    for (let name in Game.spawns){
-        let spawn = Game.spawns[name];
-
-        let roomMem = spawn.room.memory;
-        
-        if (roomMem.creepRoleDist[CREEP_TYPE_BUB] < roomMem.optimalCreeps[CREEP_TYPE_BUB]){
-            let returnValue = spawn.spawnCreep([WORK, MOVE, CARRY], "BUB" + time, {memory: {role: CREEP_TYPE_BUB, mission: MISSION_WAITING, target: null}});
-            
-            switch (returnValue) {
-                case OK:
-                    spawn.room.memory.creepRoleDist[CREEP_TYPE_BUB]++;
-                    break;
-                case ERR_BUSY:
-                    break;
-                case ERR_NOT_ENOUGH_ENERGY:
-                    let need = 200 - spawn.store.getUsedCapacity(RESOURCE_ENERGY);
-                    let creeps = spawn.room.find(FIND_MY_CREEPS);
-
-                        for (let i = 0; i < creeps.length; ++i){
-                            let creep = creeps[i];
-                            let value = creep.store.getUsedCapacity();
-                            if (value > 0){
-                                creep.memory.mission = MISSION_SPAWN;
-                                need -= value;
-                            }
-                            if (need <= 0){
-                                break;
-                            }
-                        }
-                    break;            
-                default:
-                    break;
-            }            
-        }
-    }
-
-    // Manage Creeps
-    for (let name in Game.creeps){
-        let creep = Game.creeps[name];
-
-        if (creep.memory.mission == MISSION_WAITING){
-            if (creep.store.getUsedCapacity() == 0){ creep.memory.mission = MISSION_MINING; creep.say("Mining!") }
-            else {
-                creep.memory.mission = MISSION_UPGRADING; creep.say("Upgrading!");
-                
-            }
-        }
-
-        if (creep.memory.mission == MISSION_MINING){
-            let target = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-            if (creep.harvest(target) == ERR_NOT_IN_RANGE){
-                creep.moveTo(target);
-            }
-            else { 
-                if (creep.store.getFreeCapacity() == 0){ 
-                    creep.memory.mission = MISSION_WAITING; creep.say("Done!") }
-            }
-        }
-        
-        if (creep.memory.mission == MISSION_UPGRADING){
-            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE){
-                creep.moveTo(creep.room.controller)
-            }
-            if (creep.store.getUsedCapacity() == 0) {creep.memory.mission = MISSION_WAITING; creep.say("Zzz...")}
-        }
-        
-        if (creep.memory.mission == MISSION_SPAWN){
-            let target = Game.spawns["Spawn1"];
-            
-            switch (creep.transfer(target, RESOURCE_ENERGY)) {
-                case OK:
-                    creep.memory.mission = MISSION_WAITING;
-                    break;
-                case ERR_NOT_IN_RANGE:
-                    creep.moveTo(target);
-                    break;
-                case ERR_FULL:
-                    creep.memory.mission = MISSION_UPGRADING;
-                    break;
-                case ERR_NOT_ENOUGH_RESOURCES:
-                    creep.memory.mission = MISSION_WAITING;
-                    break;
-                default:
-                    break;
-            }
-            
-            if (creep.transfer(Game.spawns["Spawn1"], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){ creep.moveTo(Game.spawns["Spawn1"].pos); };
+function ClearDeadCreeps(){
+    for (var i in Memory.creeps){
+        if (!Game.creeps[i]){
+            creep = Memory.creeps[i];
+            delete Memory.creeps[i];
         }
     }
 }
