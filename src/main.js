@@ -1,3 +1,5 @@
+var spawnOps = require('ops.spawn')
+
 var roomAuditInterval = 1500;
 var clearDeadCreepInterval = 150;
 // var roomNeedCalculationInterval = 1;
@@ -50,19 +52,35 @@ module.exports.loop = function () {
             constructNeed += (site.progressTotal - site.progress);
         }
 
-        if (creeps.length < 5){
-            for (spawn in spawns){
-                if (!spawn.spawning){
-                    spawn.spawnCreep([MOVE, WORK, CARRY], "BUB" + time, {memory: {role: CREEP_TYPE_BUB, mission: MISSION_WAITING}})
-                    break;
-                }
-            }
+
+        for (spawn in spawns){
+            spawnOps.run(spawn, creeps);
         }
 
         creeps.sort(function(a, b) {return b.store.getUsedCapacity(RESOURCE_ENERGY) - a.store.getUsedCapacity(RESOURCE_ENERGY)})
 
         for (let creep in creeps){
-            
+            let role = creep.memory.role;
+            switch (type) {
+                case CREEP_TYPE_BUB:
+                    BuBing(creep);
+                    break;
+                case CREEP_TYPE_FIGHTER:
+
+                    break;
+                case CREEP_TYPE_HAULER:
+                    Hauler(creep);
+                    break;
+                case CREEP_TYPE_MINER:
+
+                    break;
+                case CREEP_TYPE_TRACTOR:
+
+                    break;            
+                default:
+                    console.log("Undefined creep type.")
+                    break;
+            }
         }
 
         
@@ -78,3 +96,10 @@ function ClearDeadCreeps(){
         }
     }
 }
+
+
+
+
+
+
+
